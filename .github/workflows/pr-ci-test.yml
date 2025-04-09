@@ -45,15 +45,16 @@ jobs:
         run: |
           docker-compose -f ./docker/docker-compose.yml up -d
           echo "Waiting for services to be ready..."
-          for i in {1..20}; do
-            docker ps
-            docker exec mysql8-local mysqladmin ping -h 127.0.0.1 --silent && \
-            nc -z 127.0.0.1 6379 && \
-            echo "Services ready." && exit 0
-            echo "Waiting... ($i)"
-            sleep 1
+          for i in {1..30}; do
+            docker exec mysql8-local bash -c "mysqladmin ping -h localhost --silent" && \
+            docker exec redis7-local redis-cli ping | grep PONG && \
+            echo "✅ Services ready." && exit 0
+            echo "⏳ Waiting... ($i)"
+            sleep 2
           done
-          echo "Services did not become ready in time." && docker-compose -f ./docker/docker-compose.yml logs && exit 1
+          echo "❌ Services did not become ready in time."
+          docker-compose -f ./docker/docker-compose.yml logs
+          exit 1
 
       - name: Set environment variables if not exists
         run: |
