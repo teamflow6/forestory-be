@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Common settings -->
+    <property name="LOG_PATTERN"
+              value="[%X{request_id:-N/A}] %d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%15.15thread] %-40.40logger{39} : %msg%n"/>
+
+    <property name="LOG_DIR" value="logs/app"/>
+    <property name="FILE_NAME_PATTERN" value="%d{yyyy-MM-dd}_%i.log"/>
+    <property name="MAX_FILE_SIZE" value="20MB"/>
+    <property name="MAX_HISTORY" value="3"/>
+    <property name="TOTAL_SIZE_CAP" value="60MB"/>
+
+    <!-- Console log - (local, test, dev) -->
+    <springProfile name="local,test,dev">
+        <include resource="logs/console-appender.xml"/>
+        <root level="DEBUG">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <!-- File log - (dev, prod) -->
+    <springProfile name="dev,prod">
+        <include resource="logs/file/info-appender.xml"/>
+        <include resource="logs/file/error-appender.xml"/>
+        <root level="INFO">
+            <appender-ref ref="INFO-FILE"/>
+            <appender-ref ref="ERROR-FILE"/>
+        </root>
+    </springProfile>
+
+</configuration>
