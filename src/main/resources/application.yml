@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: forestory-be
+
+  profiles:
+    active: ${PROFILE:local}
+
+server:
+  shutdown: graceful
