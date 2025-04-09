@@ -1,6 +1,6 @@
 #!/bin/bash
 
-HOOK_PATH=".git/hooks/commit-msg-hook"
+HOOK_PATH=".git/hooks/commit-msg"
 
 install_hook() {
   mkdir -p .git/hooks
@@ -18,23 +18,23 @@ fi
 EOF
 
   chmod +x "$HOOK_PATH"
-  echo "✅ commit-msg-hook 이 설치되었습니다."
+  echo "✅ commit-msg 훅이 설치되었습니다."
 }
 
 remove_hook() {
   if [ -f "$HOOK_PATH" ]; then
     rm "$HOOK_PATH"
-    echo "🗑️ commit-msg-hook 이 제거되었습니다."
+    echo "🗑️ commit-msg 훅이 제거되었습니다."
   else
-    echo "ℹ️ commit-msg-hook 이 존재하지 않습니다."
+    echo "ℹ️ commit-msg 훅이 존재하지 않습니다."
   fi
 }
 
 check_status() {
   if [ -x "$HOOK_PATH" ]; then
-    echo "✅ commit-msg-hook 이 설치되어 있습니다"
+    echo "✅ commit-msg 훅이 설치되어 있습니다"
   else
-    echo "❌ commit-msg-hook 이 설치되어 있지 않습니다."
+    echo "❌ commit-msg 훅이 설치되어 있지 않습니다."
   fi
 }
 
