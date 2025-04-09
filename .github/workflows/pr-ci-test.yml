@@ -58,10 +58,10 @@ jobs:
 
       - name: Set environment variables if not exists
         run: |
-          if [ -n "${{ secrets.SPRING_ENV }}" ]; then
+          if [ -n "${{ secrets.SPRING_ENV }}" ] && [[ ! "${{ secrets.SPRING_ENV }}" =~ ^[[:space:]]*$ ]]; then
             echo "${{ secrets.SPRING_ENV }}" | base64 -d > .env
           else
-            echo "SPRING_ENV is empty. Skipping .env creation."
+            echo "SPRING_ENV is not defined or empty. Skipping .env creation."
           fi
 
       - name: Run tests
