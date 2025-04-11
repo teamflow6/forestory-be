@@ -36,3 +36,39 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# macOS system file
+.DS_Store
+
+# Windows system file
+Thumbs.db
+
+# Test result directory
+test-output/
+
+# Log files
+*.log
+
+# Sensitive configuration files
+*.env
+*.env.*
+application-*.yml
+application-*.yaml
+application-*.properties
+
+# Allow sharing of example files
+!application-example.yml
+!.env.example
+
+# Docker-specific files
+docker-compose.override.yml
+
+# Java compiled class files
+*.class
+
+# Build artifacts
+*.jar
+*.war
+*.zip
+*.tar.gz
+*.ear
