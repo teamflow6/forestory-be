@@ -37,6 +37,9 @@ dependencies {
     // Redis
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
+    // Tsid
+    implementation("com.github.f4b6a3:tsid-creator:$tsidCreatorVersion")
+
     // JUnit
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
