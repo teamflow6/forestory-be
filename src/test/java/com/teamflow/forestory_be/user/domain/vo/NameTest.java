@@ -27,7 +27,7 @@ class NameTest {
 
         @Test
         @DisplayName("이름이 최소/최대 길이일 때 생성된다.")
-        void should_crate_name_when_length_is_min_or_max() {
+        void should_create_name_when_length_is_min_or_max() {
             // given & when & then
             assertThatCode(() -> new Name("ab"))
                 .doesNotThrowAnyException();
@@ -59,6 +59,7 @@ class NameTest {
         @Test
         @DisplayName("이름이 2자 미만이면 예외가 발생해야 한다.")
         void should_throw_when_too_short() {
+            // given & when & then
             assertThatThrownBy(() -> new Name("a"))
                 .isInstanceOf(InvalidUserNameException.class);
         }
@@ -66,6 +67,7 @@ class NameTest {
         @Test
         @DisplayName("이름이 7자 초과이면 예외가 발생해야 한다.")
         void should_throw_when_too_long() {
+            // given & when & then
             assertThatThrownBy(() -> new Name("abcdefgh"))
                 .isInstanceOf(InvalidUserNameException.class);
         }
