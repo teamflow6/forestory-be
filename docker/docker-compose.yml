@@ -26,7 +26,7 @@ services:
     labels:
       - 'mode:standalone'
     ports:
-      - '6380:6379'
+      - '6379:6379'
 
 volumes:
   forestory-local-database:
