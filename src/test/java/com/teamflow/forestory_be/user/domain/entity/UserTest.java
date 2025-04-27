@@ -40,7 +40,7 @@ class UserTest {
         User user = User.create(new Name("name"), "https://image.com/test.png");
 
         // when
-        User updatedUser = user.update(new Name("newname"), "https://image.com/test.png");
+        User updatedUser = user.update(1L, new Name("newname"), "https://image.com/test.png");
 
         // then
         assertThat(user.getId()).isEqualTo(updatedUser.getId());
