@@ -24,7 +24,7 @@ class ArticleTest {
     @DisplayName("아티클을 정상적으로 생성한다.")
     void should_create_article() {
         // given
-        User author = User.create(new Name("authorName"), "https://image.com/author.png");
+        User author = User.create(new Name("이름"), "https://image.com/author.png");
         Title title = new Title("Article Title");
         Subtitle subtitle = new Subtitle("Article Subtitle");
         Content content = new Content("Article Content");
@@ -35,7 +35,7 @@ class ArticleTest {
 
         // then
         assertThat(article.getId()).isNotNull();
-        assertThat(article.getAuthor().getName()).isEqualTo(new Name("authorName"));
+        assertThat(article.getAuthor().getName()).isEqualTo(new Name("이름"));
         assertThat(article.getTitle()).isEqualTo(new Title("Article Title"));
         assertThat(article.getSubtitle()).isEqualTo(new Subtitle("Article Subtitle"));
         assertThat(article.getContent()).isEqualTo(new Content("Article Content"));
@@ -46,7 +46,7 @@ class ArticleTest {
     @DisplayName("아티클을 임시 저장 상태로 생성한다.")
     void should_create_article_as_draft() {
         // given
-        User author = User.create(new Name("authorName"), "https://image.com/author.png");
+        User author = User.create(new Name("이름"), "https://image.com/author.png");
         Title title = new Title("Draft Title");
         Subtitle subtitle = new Subtitle("Draft Subtitle");
         Content content = new Content("Draft Content");
@@ -57,7 +57,7 @@ class ArticleTest {
 
         // then
         assertThat(draftArticle.getId()).isNotNull();
-        assertThat(draftArticle.getAuthor().getName()).isEqualTo(new Name("authorName"));
+        assertThat(draftArticle.getAuthor().getName()).isEqualTo(new Name("이름"));
         assertThat(draftArticle.getTitle()).isEqualTo(new Title("Draft Title"));
         assertThat(draftArticle.getSubtitle()).isEqualTo(new Subtitle("Draft Subtitle"));
         assertThat(draftArticle.getContent()).isEqualTo(new Content("Draft Content"));
