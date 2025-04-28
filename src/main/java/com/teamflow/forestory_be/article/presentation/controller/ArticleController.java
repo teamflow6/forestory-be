@@ -4,6 +4,7 @@ import com.teamflow.forestory_be.article.application.dto.CreateArticleCommand;
 import com.teamflow.forestory_be.article.application.service.ArticleService;
 import com.teamflow.forestory_be.article.presentation.request.CreateArticleRequest;
 import com.teamflow.forestory_be.article.presentation.response.CreateArticleResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @PostMapping
-    public ResponseEntity<CreateArticleResponse> create(@RequestBody CreateArticleRequest request) {
+    public ResponseEntity<CreateArticleResponse> create(@RequestBody @Valid CreateArticleRequest request) {
         CreateArticleCommand command = new CreateArticleCommand(
             request.authorId(),
             request.title(),
@@ -33,7 +34,7 @@ public class ArticleController {
     }
 
     @PostMapping("/draft")
-    public ResponseEntity<CreateArticleResponse> draft(@RequestBody CreateArticleRequest request) {
+    public ResponseEntity<CreateArticleResponse> draft(@RequestBody @Valid CreateArticleRequest request) {
         CreateArticleCommand command = new CreateArticleCommand(
             request.authorId(),
             request.title(),
