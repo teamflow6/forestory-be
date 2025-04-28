@@ -1,0 +1,10 @@
+package com.teamflow.forestory_be.article.web.request;
+
+public record CreateArticleRequest(
+    Long authorId,
+    String title,
+    String subtitle,
+    String content,
+    String thumbnailUrl) {
+
+}
