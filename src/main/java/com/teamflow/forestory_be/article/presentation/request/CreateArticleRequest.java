@@ -1,4 +1,4 @@
-package com.teamflow.forestory_be.article.web.request;
+package com.teamflow.forestory_be.article.presentation.request;
 
 public record CreateArticleRequest(
     Long authorId,

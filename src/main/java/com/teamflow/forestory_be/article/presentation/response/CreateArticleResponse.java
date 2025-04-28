@@ -1,4 +1,4 @@
-package com.teamflow.forestory_be.article.web.response;
+package com.teamflow.forestory_be.article.presentation.response;
 
 public record CreateArticleResponse(
     Long articleId,
