@@ -56,19 +56,11 @@ class ContentTest {
         }
 
         @Test
-        @DisplayName("내용이 빈 문자열이면 예외가 발생")
+        @DisplayName("내용이 빈 문자열(1자미만)이면 예외가 발생")
         void should_throw_when_empty() {
             //given & when & then
             assertThatThrownBy(() -> new Content(""))
                 .isInstanceOf(InvalidContentException.class);
-        }
-
-        @Test
-        @DisplayName("내용이 1자 미만이면 예외가 발생")
-        void should_throw_when_too_short() {
-            // given & when & then
-            assertThatThrownBy(() -> new Content("a"))
-            .isInstanceOf(InvalidContentException.class);
         }
 
         @Test
