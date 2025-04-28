@@ -1,10 +1,9 @@
-package com.teamflow.forestory_be.article.web.controller;
+package com.teamflow.forestory_be.article.presentation.controller;
 
 import com.teamflow.forestory_be.article.application.dto.CreateArticleCommand;
 import com.teamflow.forestory_be.article.application.service.ArticleService;
-import com.teamflow.forestory_be.article.web.request.CreateArticleRequest;
-import com.teamflow.forestory_be.article.web.response.CreateArticleResponse;
-import com.teamflow.forestory_be.user.domain.exception.UserNotFoundException;
+import com.teamflow.forestory_be.article.presentation.request.CreateArticleRequest;
+import com.teamflow.forestory_be.article.presentation.response.CreateArticleResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
