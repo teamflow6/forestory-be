@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ArticlePersistenceAdaptor implements ArticleRepositoryPort{
+public class ArticlePersistenceAdaptor implements ArticleRepositoryPort {
 
     private final ArticleJpaRepository articleJpaRepository;
 
