@@ -50,7 +50,7 @@ class TitleTest {
         void should_throw_when_null() {
             // given & when & then
             assertThatThrownBy(() -> new Title(null))
-                .isInstanceOf(NullPointerException.class);
+                    .isInstanceOf(NullPointerException.class);
         }
 
         @Test
@@ -58,7 +58,7 @@ class TitleTest {
         void should_throw_when_empty() {
             // given & when & then
             assertThatThrownBy(() -> new Title(""))
-                .isInstanceOf(InvalidTitleException.class);
+                    .isInstanceOf(InvalidTitleException.class);
         }
 
         @Test
@@ -66,7 +66,7 @@ class TitleTest {
         void should_throw_when_too_short() {
             // given & when & then
             assertThatThrownBy(() -> new Title(""))
-                .isInstanceOf(InvalidTitleException.class);
+                    .isInstanceOf(InvalidTitleException.class);
         }
 
         @Test
@@ -74,7 +74,7 @@ class TitleTest {
         void should_throw_when_too_long() {
             // given & when & then
             assertThatThrownBy(() -> new Title("a".repeat(51)))
-                .isInstanceOf(InvalidTitleException.class);
+                    .isInstanceOf(InvalidTitleException.class);
         }
     }
 }
