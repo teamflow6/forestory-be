@@ -1,7 +1,6 @@
 package com.teamflow.forestory_be.article.domain.repository;
 
 import com.teamflow.forestory_be.article.domain.entity.Article;
-import java.util.List;
 
 public interface ArticleRepositoryPort {
 
