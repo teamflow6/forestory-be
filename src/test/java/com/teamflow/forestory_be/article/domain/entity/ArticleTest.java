@@ -24,18 +24,18 @@ class ArticleTest {
     @DisplayName("아티클을 정상적으로 생성한다.")
     void should_create_article() {
         // given
-        User author = User.create(new Name("이름"), "https://image.com/author.png");
+        Long authorId = 1L;
         Title title = new Title("Article Title");
         Subtitle subtitle = new Subtitle("Article Subtitle");
         Content content = new Content("Article Content");
         String thumbnailUrl = "https://image.com/thumbnail.png";
 
         // when
-        Article article = Article.create(author, title, subtitle, content, thumbnailUrl);
+        Article article = Article.create(authorId, title, subtitle, content, thumbnailUrl);
 
         // then
         assertThat(article.getId()).isNotNull();
-        assertThat(article.getAuthor().getName()).isEqualTo(new Name("이름"));
+        assertThat(article.getAuthorId()).isEqualTo(authorId);
         assertThat(article.getTitle()).isEqualTo(new Title("Article Title"));
         assertThat(article.getSubtitle()).isEqualTo(new Subtitle("Article Subtitle"));
         assertThat(article.getContent()).isEqualTo(new Content("Article Content"));
@@ -46,18 +46,18 @@ class ArticleTest {
     @DisplayName("아티클을 임시 저장 상태로 생성한다.")
     void should_create_article_as_draft() {
         // given
-        User author = User.create(new Name("이름"), "https://image.com/author.png");
+        Long authorId = 1L;
         Title title = new Title("Draft Title");
         Subtitle subtitle = new Subtitle("Draft Subtitle");
         Content content = new Content("Draft Content");
         String thumbnailUrl = "https://image.com/thumbnail.png";
 
         // when
-        Article draftArticle = Article.draft(author, title, subtitle, content, thumbnailUrl);
+        Article draftArticle = Article.draft(authorId, title, subtitle, content, thumbnailUrl);
 
         // then
         assertThat(draftArticle.getId()).isNotNull();
-        assertThat(draftArticle.getAuthor().getName()).isEqualTo(new Name("이름"));
+        assertThat(draftArticle.getAuthorId()).isEqualTo(authorId);
         assertThat(draftArticle.getTitle()).isEqualTo(new Title("Draft Title"));
         assertThat(draftArticle.getSubtitle()).isEqualTo(new Subtitle("Draft Subtitle"));
         assertThat(draftArticle.getContent()).isEqualTo(new Content("Draft Content"));

@@ -13,11 +13,11 @@ class ContentTest {
 
     @Nested
     @DisplayName("정상 case")
-    class ValidNameTest{
+    class ValidNameTest {
 
         @Test
         @DisplayName("정상적인 내용을 생성")
-        void should_create_valid_content(){
+        void should_create_valid_content() {
             // given&when
             Content content = new Content("test");
             // then
@@ -51,7 +51,7 @@ class ContentTest {
         void should_throw_when_null() {
             //given & when &then
             assertThatThrownBy(() -> new Content(null))
-                .isInstanceOf(NullPointerException.class);
+                    .isInstanceOf(NullPointerException.class);
 
         }
 
@@ -60,7 +60,7 @@ class ContentTest {
         void should_throw_when_empty() {
             //given & when & then
             assertThatThrownBy(() -> new Content(""))
-                .isInstanceOf(InvalidContentException.class);
+                    .isInstanceOf(InvalidContentException.class);
         }
 
         @Test
@@ -68,12 +68,12 @@ class ContentTest {
         void should_throw_when_too_long() {
             //given & when  & then
             assertThatThrownBy(() -> new Content("a".repeat(3001)))
-                .isInstanceOf(InvalidContentException.class);
+                    .isInstanceOf(InvalidContentException.class);
 
         }
-        }
+    }
 
-        }
+}
 
 
 
