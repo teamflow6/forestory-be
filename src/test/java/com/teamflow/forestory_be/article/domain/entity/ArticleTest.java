@@ -7,8 +7,6 @@ import com.teamflow.forestory_be.support.common.util.TsidGenerator;
 import com.teamflow.forestory_be.article.domain.vo.Content;
 import com.teamflow.forestory_be.article.domain.vo.Subtitle;
 import com.teamflow.forestory_be.article.domain.vo.Title;
-import com.teamflow.forestory_be.user.domain.entity.User;
-import com.teamflow.forestory_be.user.domain.vo.Name;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
