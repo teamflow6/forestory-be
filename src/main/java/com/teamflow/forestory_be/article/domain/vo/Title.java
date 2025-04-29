@@ -1,7 +1,6 @@
 package com.teamflow.forestory_be.article.domain.vo;
 
 import com.teamflow.forestory_be.article.domain.exception.InvalidTitleException;
-import com.teamflow.forestory_be.user.domain.exception.InvalidUserNameException;
 import java.util.Objects;
 
 public record Title(String value) {
@@ -13,10 +12,9 @@ public record Title(String value) {
     private static final String INVALID_TITLE_LENGTH = "제목은 %d자 이상 %d자 이하여야 합니다.";
 
 
-
-    public Title{
+    public Title {
         Objects.requireNonNull(value, NULL_TITLE);
-        if(value.isEmpty()){
+        if (value.isEmpty()) {
             throw new InvalidTitleException(EMPTY_TITLE);
         }
         if (value.length() < MIN_LENGTH || value.length() > MAX_LENGTH) {
