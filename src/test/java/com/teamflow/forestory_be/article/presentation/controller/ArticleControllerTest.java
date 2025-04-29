@@ -18,7 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(controllers = ArticleController.class)
+@WebMvcTest(ArticleController.class)
 class ArticleControllerTest {
 
     @Autowired
@@ -35,7 +35,7 @@ class ArticleControllerTest {
     void should_createArticle_success() throws Exception {
         // given
         CreateArticleRequest request = new CreateArticleRequest(
-                1L,
+                10L,
                 "제목",
                 "부제목",
                 "본문 내용",
@@ -53,7 +53,7 @@ class ArticleControllerTest {
         ))).willReturn(1L);
 
         // when & then
-        mockMvc.perform(post("/api/articles")
+        mockMvc.perform(post("/api/v1/articles")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -66,7 +66,7 @@ class ArticleControllerTest {
     void should_draftArticle_success() throws Exception {
         // given
         CreateArticleRequest request = new CreateArticleRequest(
-                1L,
+                10L,
                 "제목",
                 "부제목",
                 "본문 내용",
@@ -85,7 +85,7 @@ class ArticleControllerTest {
         ))).willReturn(2L);
 
         // when & then
-        mockMvc.perform(post("/api/articles/draft")
+        mockMvc.perform(post("/api/v1/articles/draft")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -108,7 +108,7 @@ class ArticleControllerTest {
         );
 
         //when & then
-        mockMvc.perform(post("/api/articles")
+        mockMvc.perform(post("/api/v1/articles")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
