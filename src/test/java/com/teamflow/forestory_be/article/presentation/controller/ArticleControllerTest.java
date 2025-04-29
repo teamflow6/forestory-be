@@ -4,13 +4,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teamflow.forestory_be.article.application.dto.CreateArticleCommand;
 import com.teamflow.forestory_be.article.application.service.ArticleService;
 import com.teamflow.forestory_be.article.presentation.request.CreateArticleRequest;
-import com.teamflow.forestory_be.article.presentation.response.CreateArticleResponse;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,27 +35,29 @@ class ArticleControllerTest {
     void should_createArticle_success() throws Exception {
         // given
         CreateArticleRequest request = new CreateArticleRequest(
-            1L,
-            "제목",
-            "부제목",
-            "본문 내용",
-            "https://image.com/thumbnail.png"
+                1L,
+                "제목",
+                "부제목",
+                "본문 내용",
+                "https://image.com/thumbnail.png",
+                false
         );
 
         given(articleService.create(new CreateArticleCommand(
-            request.authorId(),
-            request.title(),
-            request.subtitle(),
-            request.content(),
-            request.thumbnailUrl()
+                request.authorId(),
+                request.title(),
+                request.subtitle(),
+                request.content(),
+                request.thumbnailUrl(),
+                request.isDraft()
         ))).willReturn(1L);
 
         // when & then
         mockMvc.perform(post("/api/articles")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.articleId").value(1L));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.articleId").value(1L));
 
     }
 
@@ -65,27 +66,30 @@ class ArticleControllerTest {
     void should_draftArticle_success() throws Exception {
         // given
         CreateArticleRequest request = new CreateArticleRequest(
-            1L,
-            "제목",
-            "부제목",
-            "본문 내용",
-            "https://image.com/thumbnail.png"
+                1L,
+                "제목",
+                "부제목",
+                "본문 내용",
+                "https://image.com/thumbnail.png",
+                true
+
         );
 
-        given(articleService.draft(new CreateArticleCommand(
-            request.authorId(),
-            request.title(),
-            request.subtitle(),
-            request.content(),
-            request.thumbnailUrl()
+        given(articleService.create(new CreateArticleCommand(
+                request.authorId(),
+                request.title(),
+                request.subtitle(),
+                request.content(),
+                request.thumbnailUrl(),
+                request.isDraft()
         ))).willReturn(2L);
 
         // when & then
         mockMvc.perform(post("/api/articles/draft")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.articleId").value(2L));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.articleId").value(2L));
 
     }
 
@@ -94,19 +98,20 @@ class ArticleControllerTest {
     void should_createArticle_fail_missingField() throws Exception {
         //given
         CreateArticleRequest request = new CreateArticleRequest(
-            null,
-            "제목",
-            "부제목",
-            "본문 내용",
-            "https://image.com/thumbnail.png"
+                null,
+                "제목",
+                "부제목",
+                "본문 내용",
+                "https://image.com/thumbnail.png",
+                true
 
         );
 
         //when & then
         mockMvc.perform(post("/api/articles")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isBadRequest());
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
 
     }
 
