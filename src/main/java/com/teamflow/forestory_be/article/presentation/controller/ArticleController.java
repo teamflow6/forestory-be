@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/articles")
+@RequestMapping("api/v1/articles")
 @RequiredArgsConstructor
 public class ArticleController {
 
@@ -22,28 +22,30 @@ public class ArticleController {
     @PostMapping
     public ResponseEntity<CreateArticleResponse> create(@RequestBody @Valid CreateArticleRequest request) {
         CreateArticleCommand command = new CreateArticleCommand(
-            request.authorId(),
-            request.title(),
-            request.subtitle(),
-            request.content(),
-            request.thumbnailUrl()
+                request.authorId(),
+                request.title(),
+                request.subtitle(),
+                request.content(),
+                request.thumbnailUrl(),
+                request.isDraft()
         );
-       Long articleId =  articleService.create(command);
-       CreateArticleResponse response = CreateArticleResponse.of(articleId);
+        Long articleId = articleService.create(command);
+        CreateArticleResponse response = CreateArticleResponse.createFromId(articleId);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/draft")
     public ResponseEntity<CreateArticleResponse> draft(@RequestBody @Valid CreateArticleRequest request) {
         CreateArticleCommand command = new CreateArticleCommand(
-            request.authorId(),
-            request.title(),
-            request.subtitle(),
-            request.content(),
-            request.thumbnailUrl()
+                request.authorId(),
+                request.title(),
+                request.subtitle(),
+                request.content(),
+                request.thumbnailUrl(),
+                request.isDraft()
         );
-        Long articleId = articleService.draft(command);
-        CreateArticleResponse response = CreateArticleResponse.of(articleId);
+        Long articleId = articleService.create(command);
+        CreateArticleResponse response = CreateArticleResponse.draftFromId(articleId);
         return ResponseEntity.ok(response);
 
     }
