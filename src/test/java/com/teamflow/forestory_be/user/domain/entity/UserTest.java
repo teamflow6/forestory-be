@@ -38,9 +38,10 @@ class UserTest {
     void should_update_user_name() {
         // given
         User user = User.create(new Name("name"), "https://image.com/test.png");
+        user = user.completeOnboarding(user.getId(), user.getName(), user.getProfileImageUrl());
 
         // when
-        User updatedUser = user.update(1L, new Name("newname"), "https://image.com/test.png");
+        User updatedUser = user.update(user.getId(), new Name("newname"), "https://image.com/test.png");
 
         // then
         assertThat(user.getId()).isEqualTo(updatedUser.getId());
