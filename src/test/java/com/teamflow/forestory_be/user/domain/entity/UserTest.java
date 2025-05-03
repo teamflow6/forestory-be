@@ -37,8 +37,7 @@ class UserTest {
     @DisplayName("유저 이름을 정상적으로 수정한다.")
     void should_update_user_name() {
         // given
-        User user = User.create(new Name("name"), "https://image.com/test.png");
-        user = user.completeOnboarding(user.getId(), user.getName(), user.getProfileImageUrl());
+        User user = User.reconstruct(1L, new Name("name"), "https://image.com/test.png", UserStatus.ACTIVE);
 
         // when
         User updatedUser = user.update(user.getId(), new Name("newname"), "https://image.com/test.png");
