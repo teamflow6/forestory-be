@@ -2,12 +2,15 @@ server:
   shutdown: graceful
 
 spring:
+  config:
+    import: optional:classpath:.env.properties
+
   jackson:
     property-naming-strategy: SNAKE_CASE
 
   cors:
-    allowed-origins: ${ALLOWED_ORIGINS}
-    allowed-methods: ${ALLOWED_METHODS}
+    allowed-origins: ${ALLOWED_ORIGINS:http://localhost:3000, http://localhost:5173}
+    allowed-methods: ${ALLOWED_METHODS:OPTIONS,GET,POST,PUT,PATCH,DELETE}
 
   cookie:
     max-age: 1234567890
@@ -64,10 +67,10 @@ spring:
 app:
   jwt:
     secret-key: ${JWT_SECRET_KEY}
-    access-token-expiration: ${ACCESS_TOKEN_EXP}
-    refresh-token-expiration: ${REFRESH_TOKEN_EXP}
+    access-token-expiration: ${ACCESS_TOKEN_EXP:987654321}
+    refresh-token-expiration: ${REFRESH_TOKEN_EXP:987654321}
 
-  base-uri: ${BASE_URI}
+  base-uri: http://localhost:8080
 
 firebase:
   account:
