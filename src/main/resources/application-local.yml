@@ -2,9 +2,6 @@ server:
   shutdown: graceful
 
 spring:
-  config:
-    import: optional:classpath:.env.properties
-
   jackson:
     property-naming-strategy: SNAKE_CASE
 

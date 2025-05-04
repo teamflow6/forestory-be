@@ -59,12 +59,6 @@ jobs:
       - name: Decode .env.properties from secrets
         run: echo "${{ secrets.SPRING_ENV_PROPS }}" | base64 -d > src/main/resources/.env.properties
 
-      - name: Export variables
-        run: |
-          set -a
-          source .env
-          set +a
-
       - name: Run tests
         run: ./gradlew test
 
