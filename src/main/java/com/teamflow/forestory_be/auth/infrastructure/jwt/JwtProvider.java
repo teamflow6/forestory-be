@@ -22,13 +22,13 @@ public class JwtProvider {
     private final JwtProperties jwtProperties;
 
     public JwtProvider(JwtProperties jwtProperties) {
-        this.secretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtProperties.secretKey()));
+        this.secretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtProperties.getSecretKey()));
         this.jwtProperties = jwtProperties;
     }
 
     public String generateAccessToken(Long userId) {
         Claims claims = Jwts.claims(Map.of(CLAIM_USER_ID, userId.toString()));
-        return generateToken(claims, ACCESS_TOKEN, jwtProperties.accessTokenExpiration());
+        return generateToken(claims, ACCESS_TOKEN, jwtProperties.getAccessTokenExpiration());
     }
 
     public String generateRefreshToken(Long userId, Long tokenId) {
@@ -36,7 +36,7 @@ public class JwtProvider {
             CLAIM_USER_ID, userId.toString(),
             CLAIM_TOKEN_ID, tokenId.toString())
         );
-        return generateToken(claims, REFRESH_TOKEN, jwtProperties.refreshTokenExpiration());
+        return generateToken(claims, REFRESH_TOKEN, jwtProperties.getRefreshTokenExpiration());
     }
 
     private String generateToken(Claims claims, String subject, Long expire) {

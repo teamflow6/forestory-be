@@ -23,7 +23,7 @@ public class JwtExtractor {
     private final JwtParser jwtParser;
 
     public JwtExtractor(JwtProperties jwtProperties) {
-        SecretKey secretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtProperties.secretKey()));
+        SecretKey secretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtProperties.getSecretKey()));
         this.jwtParser = Jwts.parserBuilder()
             .setSigningKey(secretKey)
             .build();
