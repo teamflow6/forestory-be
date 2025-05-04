@@ -8,8 +8,8 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 @ConfigurationPropertiesScan
 public class ForestoryBeApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ForestoryBeApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ForestoryBeApplication.class, args);
+    }
 
 }
