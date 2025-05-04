@@ -56,8 +56,8 @@ jobs:
           docker-compose -f ./docker/docker-compose.yml logs
           exit 1
 
-      - name: Decode .env from secrets
-        run: echo "${{ secrets.SPRING_ENV }}" | base64 -d > .env
+      - name: Decode .env.properties from secrets
+        run: echo "${{ secrets.SPRING_ENV_PROPS }}" | base64 -d > src/main/resources/.env.properties
 
       - name: Export variables
         run: |
