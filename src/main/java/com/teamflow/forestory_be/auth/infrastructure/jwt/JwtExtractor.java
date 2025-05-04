@@ -7,7 +7,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import java.util.Base64;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import javax.crypto.SecretKey;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ public class JwtExtractor {
     private final JwtParser jwtParser;
 
     public JwtExtractor(JwtProperties jwtProperties) {
-        SecretKey secretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtProperties.getSecretKey()));
+        SecretKey secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes(StandardCharsets.UTF_8));
         this.jwtParser = Jwts.parserBuilder()
             .setSigningKey(secretKey)
             .build();
