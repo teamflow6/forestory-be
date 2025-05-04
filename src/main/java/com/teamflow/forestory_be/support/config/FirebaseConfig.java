@@ -5,7 +5,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +20,8 @@ public class FirebaseConfig {
     public FirebaseApp firebaseApp() {
         try {
             ByteArrayInputStream serviceAccount = new ByteArrayInputStream(
-                credentials.getBytes(StandardCharsets.UTF_8));
+                Base64.getDecoder().decode(credentials)
+            );
             FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .build();
