@@ -21,7 +21,20 @@ public class User {
         this.status = Objects.requireNonNull(status);
     }
 
-    public User update(Name name, String profileImageUrl) {
+    public User completeOnboarding(Long userId, Name name, String profileImageUrl) {
+        validateUser(userId);
+        validateStatus(UserStatus.ONBOARDING);
+        return new User(
+            this.id,
+            updateIfDifferent(name, this.name),
+            updateIfDifferent(profileImageUrl, this.profileImageUrl),
+            UserStatus.ACTIVE
+        );
+    }
+
+    public User update(Long userId, Name name, String profileImageUrl) {
+        validateUser(userId);
+        validateStatus(UserStatus.ACTIVE);
         return new User(
             this.id,
             updateIfDifferent(name, this.name),
@@ -37,6 +50,18 @@ public class User {
 
     public static User reconstruct(Long id, Name name, String profileImageUrl, UserStatus status) {
         return new User(id, name, profileImageUrl, status);
+    }
+
+    private void validateUser(Long userId) {
+        if (this.id != userId) {
+            throw new IllegalArgumentException("권한이 없는 사용자입니다.");
+        }
+    }
+
+    private void validateStatus(UserStatus status) {
+        if (this.status != status) {
+            throw new IllegalArgumentException("올바르지 않은 상태의 사용자입니다.");
+        }
     }
 
     // TODO: 추후 Util 클래스 분리 고려

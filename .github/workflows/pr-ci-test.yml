@@ -45,7 +45,7 @@ jobs:
         run: |
           docker-compose -f ./docker/docker-compose.yml up -d
           echo "Waiting for services to be ready..."
-          for i in {1..30}; do
+          for i in {1..15}; do
             docker exec mysql8-local bash -c "mysqladmin ping -h localhost --silent" && \
             docker exec redis7-local redis-cli ping | grep PONG && \
             echo "✅ Services ready." && exit 0
@@ -56,16 +56,12 @@ jobs:
           docker-compose -f ./docker/docker-compose.yml logs
           exit 1
 
-      - name: Set environment variables if not exists
-        run: |
-          if [ -n "${{ secrets.SPRING_ENV }}" ] && [[ ! "${{ secrets.SPRING_ENV }}" =~ ^[[:space:]]*$ ]]; then
-            echo "${{ secrets.SPRING_ENV }}" | base64 -d > .env
-          else
-            echo "SPRING_ENV is not defined or empty. Skipping .env creation."
-          fi
+      - name: Decode .env.properties from secrets
+        run: echo "${{ secrets.SPRING_ENV }}" > src/main/resources/.env.properties
 
       - name: Run tests
         run: ./gradlew test
+
 
       - name: Publish test results to PR
         uses: EnricoMi/publish-unit-test-result-action@v2

@@ -37,10 +37,10 @@ class UserTest {
     @DisplayName("유저 이름을 정상적으로 수정한다.")
     void should_update_user_name() {
         // given
-        User user = User.create(new Name("name"), "https://image.com/test.png");
+        User user = User.reconstruct(1L, new Name("name"), "https://image.com/test.png", UserStatus.ACTIVE);
 
         // when
-        User updatedUser = user.update(new Name("newname"), "https://image.com/test.png");
+        User updatedUser = user.update(user.getId(), new Name("newname"), "https://image.com/test.png");
 
         // then
         assertThat(user.getId()).isEqualTo(updatedUser.getId());

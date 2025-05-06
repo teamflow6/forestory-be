@@ -4,4 +4,6 @@ import com.teamflow.forestory_be.user.infrastructure.persistence.entity.UserJpaE
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserJpaRepository extends JpaRepository<UserJpaEntity, Long> {
+
+    Boolean existsByName(String name);
 }
