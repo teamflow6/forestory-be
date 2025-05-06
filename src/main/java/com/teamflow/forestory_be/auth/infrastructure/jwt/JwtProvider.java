@@ -4,7 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import java.util.Base64;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Map;
 import javax.crypto.SecretKey;
@@ -22,7 +22,7 @@ public class JwtProvider {
     private final JwtProperties jwtProperties;
 
     public JwtProvider(JwtProperties jwtProperties) {
-        this.secretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtProperties.getSecretKey()));
+        this.secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes(StandardCharsets.UTF_8));
         this.jwtProperties = jwtProperties;
     }
 
