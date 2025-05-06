@@ -57,7 +57,7 @@ jobs:
           exit 1
 
       - name: Decode .env.properties from secrets
-        run: echo "${{ secrets.SPRING_ENV_PROPS }}" | base64 -d > src/main/resources/.env.properties
+        run: echo "${{ secrets.SPRING_ENV }}" > src/main/resources/.env.properties
 
       - name: Run tests
         run: ./gradlew test
