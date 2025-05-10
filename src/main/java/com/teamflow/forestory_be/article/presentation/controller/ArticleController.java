@@ -22,7 +22,7 @@ public class ArticleController {
 
     @PostMapping
     public ResponseEntity<CreateArticleResponse> create(
-            @AuthenticationPrincipal(expression = "username") Long userId,
+            @AuthenticationPrincipal Long userId,
             @RequestBody @Valid CreateArticleRequest request
     ) {
         CreateArticleCommand command = new CreateArticleCommand(
@@ -39,7 +39,7 @@ public class ArticleController {
 
     @PostMapping("/draft")
     public ResponseEntity<CreateArticleResponse> draft(
-            @AuthenticationPrincipal(expression = "username") Long userId,
+            @AuthenticationPrincipal Long userId,
             @RequestBody @Valid CreateArticleRequest request
     ) {
         CreateArticleCommand command = new CreateArticleCommand(
