@@ -7,6 +7,7 @@ import com.teamflow.forestory_be.article.presentation.response.CreateArticleResp
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,9 +21,12 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @PostMapping
-    public ResponseEntity<CreateArticleResponse> create(@RequestBody @Valid CreateArticleRequest request) {
+    public ResponseEntity<CreateArticleResponse> create(
+            @AuthenticationPrincipal Long userId,
+            @RequestBody @Valid CreateArticleRequest request
+    ) {
         CreateArticleCommand command = new CreateArticleCommand(
-                request.authorId(),
+                userId,
                 request.title(),
                 request.subtitle(),
                 request.content(),
@@ -30,14 +34,16 @@ public class ArticleController {
                 request.isDraft()
         );
         Long articleId = articleService.create(command);
-        CreateArticleResponse response = CreateArticleResponse.createFromId(articleId);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(CreateArticleResponse.createFromId(articleId));
     }
 
     @PostMapping("/draft")
-    public ResponseEntity<CreateArticleResponse> draft(@RequestBody @Valid CreateArticleRequest request) {
+    public ResponseEntity<CreateArticleResponse> draft(
+            @AuthenticationPrincipal Long userId,
+            @RequestBody @Valid CreateArticleRequest request
+    ) {
         CreateArticleCommand command = new CreateArticleCommand(
-                request.authorId(),
+                userId,
                 request.title(),
                 request.subtitle(),
                 request.content(),
@@ -45,8 +51,6 @@ public class ArticleController {
                 request.isDraft()
         );
         Long articleId = articleService.create(command);
-        CreateArticleResponse response = CreateArticleResponse.draftFromId(articleId);
-        return ResponseEntity.ok(response);
-
+        return ResponseEntity.ok(CreateArticleResponse.draftFromId(articleId));
     }
 }
