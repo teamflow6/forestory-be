@@ -1,4 +1,4 @@
-package com.teamflow.forestory_be.article.presentation.request;
+package com.teamflow.forestory_be.article.presentation.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

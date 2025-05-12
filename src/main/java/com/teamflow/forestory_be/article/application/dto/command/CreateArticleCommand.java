@@ -1,4 +1,4 @@
-package com.teamflow.forestory_be.article.application.dto;
+package com.teamflow.forestory_be.article.application.dto.command;
 
 public record CreateArticleCommand(
         Long authorId,
