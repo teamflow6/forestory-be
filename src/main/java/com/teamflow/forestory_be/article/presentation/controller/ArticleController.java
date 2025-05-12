@@ -1,13 +1,17 @@
 package com.teamflow.forestory_be.article.presentation.controller;
 
-import com.teamflow.forestory_be.article.application.dto.CreateArticleCommand;
+import com.teamflow.forestory_be.article.application.dto.command.CreateArticleCommand;
+import com.teamflow.forestory_be.article.application.dto.query.SelectArticleQuery;
 import com.teamflow.forestory_be.article.application.service.ArticleService;
-import com.teamflow.forestory_be.article.presentation.request.CreateArticleRequest;
-import com.teamflow.forestory_be.article.presentation.response.CreateArticleResponse;
+import com.teamflow.forestory_be.article.presentation.dto.request.CreateArticleRequest;
+import com.teamflow.forestory_be.article.presentation.dto.response.CreateArticleResponse;
+import com.teamflow.forestory_be.article.presentation.dto.response.SelectArticleResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,5 +56,15 @@ public class ArticleController {
         );
         Long articleId = articleService.create(command);
         return ResponseEntity.ok(CreateArticleResponse.draftFromId(articleId));
+    }
+
+    @GetMapping("/{articleId}")
+    public ResponseEntity<SelectArticleResponse> getArticleById(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long articleId
+    ) {
+        SelectArticleQuery selectArticleQuery = new SelectArticleQuery(articleId);
+        SelectArticleResponse selectArticleResponse = articleService.select(selectArticleQuery);
+        return ResponseEntity.ok(selectArticleResponse);
     }
 }
