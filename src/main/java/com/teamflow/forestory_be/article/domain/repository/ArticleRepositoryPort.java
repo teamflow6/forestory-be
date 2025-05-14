@@ -8,5 +8,4 @@ public interface ArticleRepositoryPort {
     void save(Article article);
 
     Article getById(Long id);
-//    List<Article> findByAuthorId(Long authorId);
 }

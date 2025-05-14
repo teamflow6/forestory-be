@@ -1,6 +1,7 @@
 package com.teamflow.forestory_be.article.infrastructure.persistence;
 
 import com.teamflow.forestory_be.article.domain.entity.Article;
+import com.teamflow.forestory_be.article.domain.exception.ArticleNotFoundException;
 import com.teamflow.forestory_be.article.domain.repository.ArticleRepositoryPort;
 import com.teamflow.forestory_be.article.infrastructure.persistence.entity.ArticleJpaEntity;
 import com.teamflow.forestory_be.article.infrastructure.persistence.repository.ArticleJpaRepository;
@@ -22,9 +23,10 @@ public class ArticlePersistenceAdaptor implements ArticleRepositoryPort {
 
     @Override
     public Article getById(Long id) {
-        ArticleJpaEntity articleJpaEntity = articleJpaRepository.getById(id);
-        Article article = ArticlePersistenceMapper.toDomainEntity(articleJpaEntity);
-        return article;
+        ArticleJpaEntity articleJpaEntity = articleJpaRepository.findById(id)
+                .orElseThrow(ArticleNotFoundException::new);
+        return ArticlePersistenceMapper.toDomainEntity(articleJpaEntity);
+
     }
 
 
