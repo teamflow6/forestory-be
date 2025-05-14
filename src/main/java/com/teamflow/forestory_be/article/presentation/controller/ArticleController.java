@@ -1,11 +1,11 @@
 package com.teamflow.forestory_be.article.presentation.controller;
 
 import com.teamflow.forestory_be.article.application.dto.command.CreateArticleCommand;
-import com.teamflow.forestory_be.article.application.dto.query.SelectArticleQuery;
+import com.teamflow.forestory_be.article.application.dto.query.GetArticleQuery;
 import com.teamflow.forestory_be.article.application.service.ArticleService;
 import com.teamflow.forestory_be.article.presentation.dto.request.CreateArticleRequest;
 import com.teamflow.forestory_be.article.presentation.dto.response.CreateArticleResponse;
-import com.teamflow.forestory_be.article.presentation.dto.response.SelectArticleResponse;
+import com.teamflow.forestory_be.article.presentation.dto.response.GetArticleResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -59,12 +59,12 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}")
-    public ResponseEntity<SelectArticleResponse> getArticleById(
+    public ResponseEntity<GetArticleResponse> getArticleById(
             @AuthenticationPrincipal Long userId,
             @PathVariable Long articleId
     ) {
-        SelectArticleQuery selectArticleQuery = new SelectArticleQuery(articleId);
-        SelectArticleResponse selectArticleResponse = articleService.select(selectArticleQuery);
-        return ResponseEntity.ok(selectArticleResponse);
+        GetArticleQuery getArticleQuery = new GetArticleQuery(articleId);
+        GetArticleResponse getArticleResponse = articleService.get(getArticleQuery);
+        return ResponseEntity.ok(getArticleResponse);
     }
 }
