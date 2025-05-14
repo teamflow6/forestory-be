@@ -1,6 +1,6 @@
 package com.teamflow.forestory_be.article.application.dto.query;
 
-public record SelectArticleQuery(
+public record GetArticleQuery(
         Long articleId
 ) {
 
