@@ -1,22 +1,22 @@
 package com.teamflow.forestory_be.article.application.service;
 
 import com.teamflow.forestory_be.article.application.dto.command.CreateArticleCommand;
-import com.teamflow.forestory_be.article.application.dto.query.SelectArticleQuery;
+import com.teamflow.forestory_be.article.application.dto.query.GetArticleQuery;
 import com.teamflow.forestory_be.article.domain.entity.Article;
 import com.teamflow.forestory_be.article.domain.repository.ArticleRepositoryPort;
 import com.teamflow.forestory_be.article.domain.vo.Content;
 import com.teamflow.forestory_be.article.domain.vo.Subtitle;
 import com.teamflow.forestory_be.article.domain.vo.Title;
-import com.teamflow.forestory_be.article.presentation.dto.response.SelectArticleResponse;
+import com.teamflow.forestory_be.article.presentation.dto.response.GetArticleResponse;
 import com.teamflow.forestory_be.user.domain.entity.User;
 import com.teamflow.forestory_be.user.domain.repository.UserRepositoryPort;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class ArticleService {
 
     private final ArticleRepositoryPort articleRepositoryPort;
@@ -40,12 +40,13 @@ public class ArticleService {
 
     }
 
-    public SelectArticleResponse select(SelectArticleQuery query) {
+    @Transactional(readOnly = true)
+    public GetArticleResponse get(GetArticleQuery query) {
         Article article = articleRepositoryPort.getById(query.articleId());
         User author = userRepositoryPort.getById(article.getAuthorId());
 
-        SelectArticleResponse selectArticleResponse = SelectArticleResponse.selectOf(article, author);
-        return selectArticleResponse;
+        GetArticleResponse getArticleResponse = GetArticleResponse.Of(article, author);
+        return getArticleResponse;
     }
 
 }
