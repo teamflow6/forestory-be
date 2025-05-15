@@ -13,7 +13,7 @@ public record GetArticleResponse(
         ArticleAuthorResponse author
 
 ) {
-    public static GetArticleResponse Of(Article article, User author) {
+    public static GetArticleResponse of(Article article, User author) {
         return new GetArticleResponse(
                 article.getId(),
                 article.getTitle().value(),
