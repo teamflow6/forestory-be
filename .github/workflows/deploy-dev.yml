@@ -23,7 +23,7 @@ jobs:
 
       - name: Setup deploy environment
         run: |
-          echo "${{ secrets.SPRING_ENV }}" > .env
+          echo "${{ secrets.SPRING_ENV }}" > /src/main/resources/.env
 
       - name: Caching gradle
         uses: actions/cache@v3
