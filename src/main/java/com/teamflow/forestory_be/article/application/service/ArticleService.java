@@ -45,7 +45,7 @@ public class ArticleService {
         Article article = articleRepositoryPort.getById(query.articleId());
         User author = userRepositoryPort.getById(article.getAuthorId());
 
-        GetArticleResponse getArticleResponse = GetArticleResponse.Of(article, author);
+        GetArticleResponse getArticleResponse = GetArticleResponse.of(article, author);
         return getArticleResponse;
     }
 
