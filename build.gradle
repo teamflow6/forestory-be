@@ -56,10 +56,17 @@ dependencies {
     // Firebase
     implementation("com.google.firebase:firebase-admin:$firebaseAdminVersion")
 
+    // Swagger
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocVersion")
+
     // JUnit
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+bootJar {
+    archiveFileName = 'app.jar'
 }
