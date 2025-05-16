@@ -17,6 +17,7 @@ public final class SecurityIgnorePath {
     private static OrRequestMatcher initIgnorePaths() {
         List<RequestMatcher> matchers = List.of(
             // etc
+            new AntPathRequestMatcher("/health", HttpMethod.GET.name()),
             new AntPathRequestMatcher("/v3/api-docs/**", HttpMethod.GET.name()),
             new AntPathRequestMatcher("/swagger-ui/**", HttpMethod.GET.name()),
             new AntPathRequestMatcher("/swagger-ui.html", HttpMethod.GET.name()),
