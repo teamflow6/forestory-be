@@ -1,5 +1,4 @@
 HELP.md
-*.env
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -52,13 +51,6 @@ test-output/
 # Sensitive configuration files
 *.env
 *.env.*
-application-*.yml
-application-*.yaml
-application-*.properties
-
-# Allow sharing of example files
-!application-example.yml
-!.env.example
 
 # Docker-specific files
 docker-compose.override.yml
