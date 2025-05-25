@@ -32,9 +32,6 @@ public class AuthUserJpaEntity extends BaseTimeEntity {
     @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = "password")
-    private String password;
-
     @Column(name = "firebase_uid")
     private String firebaseUid;
 

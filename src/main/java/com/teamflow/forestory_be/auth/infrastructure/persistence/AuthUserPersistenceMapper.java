@@ -17,7 +17,6 @@ public final class AuthUserPersistenceMapper {
             return AuthUser.createEmail(
                 authUserJpaEntity.getUserId(),
                 authUserJpaEntity.getEmail(),
-                authUserJpaEntity.getPassword(),
                 authUserJpaEntity.getFirebaseUid()
             );
         }
@@ -35,7 +34,6 @@ public final class AuthUserPersistenceMapper {
                 .id(authUser.getId())
                 .userId(authUser.getUserId())
                 .email(emailAuth.email())
-                .password(emailAuth.password())
                 .firebaseUid(emailAuth.firebaseUid())
                 .build();
         }

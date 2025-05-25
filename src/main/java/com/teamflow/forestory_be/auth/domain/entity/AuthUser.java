@@ -28,9 +28,9 @@ public class AuthUser {
         return new AuthUser(id, userId, socialAuth);
     }
 
-    public static AuthUser createEmail(Long userId, String email, String password, String firebaseUid) {
+    public static AuthUser createEmail(Long userId, String email, String firebaseUid) {
         Long id = TsidGenerator.generate();
-        EmailAuth emailAuth = new EmailAuth(email, password, firebaseUid);
+        EmailAuth emailAuth = new EmailAuth(email, firebaseUid);
         return new AuthUser(id, userId, emailAuth);
     }
 }
