@@ -45,5 +45,15 @@ public class Article {
         return new Article(id, authorId, title, subtitle, content, thumbnailUrl, status);
     }
 
+    public Article update(String title, String subtitle, Content content, String thumbnailUrl, ArticleStatus status) {
+        return new Article(this.id, this.authorId,
+                new Title(title),
+                new Subtitle(subtitle),
+                content,
+                thumbnailUrl,
+                status
+        );
 
+
+    }
 }
