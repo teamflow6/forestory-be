@@ -1,6 +1,7 @@
 package com.teamflow.forestory_be.article.application.service;
 
 import com.teamflow.forestory_be.article.application.dto.command.CreateArticleCommand;
+import com.teamflow.forestory_be.article.application.dto.command.DeleteArticleCommand;
 import com.teamflow.forestory_be.article.application.dto.command.UpdateArticleCommand;
 import com.teamflow.forestory_be.article.application.dto.query.GetArticleQuery;
 import com.teamflow.forestory_be.article.domain.entity.Article;
@@ -10,8 +11,10 @@ import com.teamflow.forestory_be.article.domain.vo.ArticleStatus;
 import com.teamflow.forestory_be.article.domain.vo.Content;
 import com.teamflow.forestory_be.article.domain.vo.Subtitle;
 import com.teamflow.forestory_be.article.domain.vo.Title;
+import com.teamflow.forestory_be.article.presentation.dto.response.DeleteArticleResponse;
 import com.teamflow.forestory_be.article.presentation.dto.response.GetArticleResponse;
 import com.teamflow.forestory_be.article.presentation.dto.response.UpdateArticleResponse;
+import com.teamflow.forestory_be.auth.domain.exception.UnMatchUserException;
 import com.teamflow.forestory_be.user.domain.entity.User;
 import com.teamflow.forestory_be.user.domain.repository.UserRepositoryPort;
 import lombok.RequiredArgsConstructor;
@@ -64,9 +67,23 @@ public class ArticleService {
                 ArticleStatus.valueOf(command.status())
         );
 
-        articleRepositoryPort.save(updatedArticle); //
+        articleRepositoryPort.save(updatedArticle);
 
         return UpdateArticleResponse.from(command.articleId());
+    }
+
+    @Transactional
+    public DeleteArticleResponse delete(DeleteArticleCommand command) {
+
+        Article article = articleRepositoryPort.getById(command.articleId());
+
+        if (!article.getAuthorId().equals(command.requesterId())) {
+            throw new UnMatchUserException(command.requesterId().toString()); // 직접 정의한 커스텀 예외
+        }
+        articleRepositoryPort.deleteById(command.articleId());
+
+        return DeleteArticleResponse.from(command.articleId());
+
     }
 
 
