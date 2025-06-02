@@ -1,18 +1,25 @@
 package com.teamflow.forestory_be.article.presentation.controller;
 
 import com.teamflow.forestory_be.article.application.dto.command.CreateArticleCommand;
+import com.teamflow.forestory_be.article.application.dto.command.UpdateArticleCommand;
 import com.teamflow.forestory_be.article.application.dto.query.GetArticleQuery;
 import com.teamflow.forestory_be.article.application.service.ArticleService;
 import com.teamflow.forestory_be.article.presentation.dto.request.CreateArticleRequest;
+import com.teamflow.forestory_be.article.presentation.dto.request.UpdateArticleRequest;
 import com.teamflow.forestory_be.article.presentation.dto.response.CreateArticleResponse;
 import com.teamflow.forestory_be.article.presentation.dto.response.GetArticleResponse;
+import com.teamflow.forestory_be.article.presentation.dto.response.UpdateArticleResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/v1/articles")
 @RequiredArgsConstructor
+@Validated
 public class ArticleController {
 
     private final ArticleService articleService;
@@ -35,7 +43,7 @@ public class ArticleController {
                 request.subtitle(),
                 request.content(),
                 request.thumbnailUrl(),
-                request.isDraft()
+                request.status()
         );
         Long articleId = articleService.create(command);
         return ResponseEntity.ok(CreateArticleResponse.createFromId(articleId));
@@ -52,19 +60,40 @@ public class ArticleController {
                 request.subtitle(),
                 request.content(),
                 request.thumbnailUrl(),
-                request.isDraft()
+                request.status()
         );
         Long articleId = articleService.create(command);
         return ResponseEntity.ok(CreateArticleResponse.draftFromId(articleId));
     }
 
     @GetMapping("/{articleId}")
-    public ResponseEntity<GetArticleResponse> getArticleById(
+    public ResponseEntity<GetArticleResponse> getArticle(
             @AuthenticationPrincipal Long userId,
-            @PathVariable Long articleId
+            @PathVariable @NotNull Long articleId
     ) {
         GetArticleQuery getArticleQuery = new GetArticleQuery(articleId);
         GetArticleResponse getArticleResponse = articleService.get(getArticleQuery);
         return ResponseEntity.ok(getArticleResponse);
     }
+
+    @PutMapping("/{articleId}")
+    public ResponseEntity<UpdateArticleResponse> updateArticle(
+            @AuthenticationPrincipal Long userId,
+            @RequestBody @Valid UpdateArticleRequest request,
+            @PathVariable @NotNull Long articleId
+    ) {
+        UpdateArticleCommand updateArticleCommand = new UpdateArticleCommand(
+                articleId,
+                userId,
+                request.title(),
+                request.subtitle(),
+                request.content(),
+                request.thumbnailUrl(),
+                request.status()
+        );
+        UpdateArticleResponse updateArticleResponse = articleService.update(updateArticleCommand);
+        return ResponseEntity.ok(updateArticleResponse);
+
+    }
+
 }
