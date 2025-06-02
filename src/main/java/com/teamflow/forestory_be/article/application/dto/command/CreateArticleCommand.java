@@ -6,7 +6,7 @@ public record CreateArticleCommand(
         String subtitle,
         String content,
         String thumbnailUrl,
-        boolean isDraft
+#35        String status
 ) {
 
 }
