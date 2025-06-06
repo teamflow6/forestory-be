@@ -29,8 +29,6 @@ public class ArticlePersistenceAdaptor implements ArticleRepositoryPort {
 
     @Override
     public void deleteById(Long id) {
-        ArticleJpaEntity articleJpaEntity = articleJpaRepository.findById(id)
-                .orElseThrow(ArticleNotFoundException::new);
-        articleJpaRepository.delete(articleJpaEntity);
+        articleJpaRepository.deleteById(id);
     }
 }
