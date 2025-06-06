@@ -1,12 +1,14 @@
 package com.teamflow.forestory_be.article.application.dto.command;
 
+import com.teamflow.forestory_be.article.domain.vo.ArticleStatus;
+
 public record CreateArticleCommand(
         Long authorId,
         String title,
         String subtitle,
         String content,
         String thumbnailUrl,
-        String status
+        ArticleStatus status
 ) {
 
 }
