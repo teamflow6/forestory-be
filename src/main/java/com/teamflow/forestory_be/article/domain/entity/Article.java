@@ -1,5 +1,6 @@
 package com.teamflow.forestory_be.article.domain.entity;
 
+import com.teamflow.forestory_be.article.domain.exception.InvalidArticleOwnerException;
 import com.teamflow.forestory_be.article.domain.vo.ArticleStatus;
 import com.teamflow.forestory_be.article.domain.vo.Content;
 import com.teamflow.forestory_be.article.domain.vo.Subtitle;
@@ -45,15 +46,21 @@ public class Article {
         return new Article(id, authorId, title, subtitle, content, thumbnailUrl, status);
     }
 
-    public Article update(String title, String subtitle, Content content, String thumbnailUrl, ArticleStatus status) {
-        return new Article(this.id, this.authorId,
-                new Title(title),
-                new Subtitle(subtitle),
+    public Article update(Title title, Subtitle subtitle, Content content, String thumbnailUrl, ArticleStatus status) {
+        return new Article(
+                this.id,
+                this.authorId,
+                title,
+                subtitle,
                 content,
                 thumbnailUrl,
                 status
         );
+    }
 
-
+    public void validateOwnerOrThrow(Long userId) {
+        if (authorId != userId) {
+            throw new InvalidArticleOwnerException();
+        }
     }
 }
