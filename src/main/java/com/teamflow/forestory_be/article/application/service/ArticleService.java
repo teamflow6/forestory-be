@@ -5,7 +5,6 @@ import com.teamflow.forestory_be.article.application.dto.command.DeleteArticleCo
 import com.teamflow.forestory_be.article.application.dto.command.UpdateArticleCommand;
 import com.teamflow.forestory_be.article.application.dto.query.GetArticleQuery;
 import com.teamflow.forestory_be.article.domain.entity.Article;
-import com.teamflow.forestory_be.article.domain.exception.ArticleNotFoundException;
 import com.teamflow.forestory_be.article.domain.repository.ArticleRepositoryPort;
 import com.teamflow.forestory_be.article.domain.vo.ArticleStatus;
 import com.teamflow.forestory_be.article.domain.vo.Content;
@@ -14,7 +13,6 @@ import com.teamflow.forestory_be.article.domain.vo.Title;
 import com.teamflow.forestory_be.article.presentation.dto.response.DeleteArticleResponse;
 import com.teamflow.forestory_be.article.presentation.dto.response.GetArticleResponse;
 import com.teamflow.forestory_be.article.presentation.dto.response.UpdateArticleResponse;
-import com.teamflow.forestory_be.auth.domain.exception.UnMatchUserException;
 import com.teamflow.forestory_be.user.domain.entity.User;
 import com.teamflow.forestory_be.user.domain.repository.UserRepositoryPort;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +32,7 @@ public class ArticleService {
         Subtitle subtitle = new Subtitle(command.subtitle());
         Content content = new Content(command.content());
 
-        if (command.equals("DRAFT")) {
+        if (command.status() == ArticleStatus.DRAFT) {
             Article article = Article.draft(command.authorId(), title, subtitle, content, command.thumbnailUrl());
             articleRepositoryPort.save(article);
             return article.getId();
@@ -58,13 +56,14 @@ public class ArticleService {
     @Transactional
     public UpdateArticleResponse update(UpdateArticleCommand command) {
         Article existingArticle = articleRepositoryPort.getById(command.articleId());
+        existingArticle.validateOwnerOrThrow(command.authorId());
 
         Article updatedArticle = existingArticle.update(
-                command.title(),
-                command.subtitle(),
+                new Title(command.title()),
+                new Subtitle(command.subtitle()),
                 new Content(command.content()),
                 command.thumbnailUrl(),
-                ArticleStatus.valueOf(command.status())
+                command.status()
         );
 
         articleRepositoryPort.save(updatedArticle);
@@ -74,14 +73,10 @@ public class ArticleService {
 
     @Transactional
     public DeleteArticleResponse delete(DeleteArticleCommand command) {
-
         Article article = articleRepositoryPort.getById(command.articleId());
 
-        if (!article.getAuthorId().equals(command.requesterId())) {
-            throw new UnMatchUserException(command.requesterId().toString()); // 직접 정의한 커스텀 예외
-        }
+        article.validateOwnerOrThrow(command.authorId());
         articleRepositoryPort.deleteById(command.articleId());
-
         return DeleteArticleResponse.from(command.articleId());
 
     }
