@@ -3,16 +3,19 @@ package com.teamflow.forestory_be.article.presentation.controller;
 import com.teamflow.forestory_be.article.application.dto.command.CreateArticleCommand;
 import com.teamflow.forestory_be.article.application.dto.command.DeleteArticleCommand;
 import com.teamflow.forestory_be.article.application.dto.command.UpdateArticleCommand;
+import com.teamflow.forestory_be.article.application.dto.command.UpdateArticleStatusCommand;
 import com.teamflow.forestory_be.article.application.dto.query.GetArticleQuery;
 import com.teamflow.forestory_be.article.application.service.ArticleService;
+import com.teamflow.forestory_be.article.domain.vo.ArticleStatus;
 import com.teamflow.forestory_be.article.presentation.dto.request.CreateArticleRequest;
 import com.teamflow.forestory_be.article.presentation.dto.request.UpdateArticleRequest;
+import com.teamflow.forestory_be.article.presentation.dto.request.UpdateArticleStatusRequest;
 import com.teamflow.forestory_be.article.presentation.dto.response.CreateArticleResponse;
 import com.teamflow.forestory_be.article.presentation.dto.response.DeleteArticleResponse;
 import com.teamflow.forestory_be.article.presentation.dto.response.GetArticleResponse;
 import com.teamflow.forestory_be.article.presentation.dto.response.UpdateArticleResponse;
+import com.teamflow.forestory_be.article.presentation.dto.response.UpdateArticleStatusResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -46,7 +50,7 @@ public class ArticleController {
                 request.subtitle(),
                 request.content(),
                 request.thumbnailUrl(),
-                request.status()
+                ArticleStatus.from(request.status())
         );
         Long articleId = articleService.create(command);
         return ResponseEntity.ok(CreateArticleResponse.createFromId(articleId));
@@ -63,7 +67,7 @@ public class ArticleController {
                 request.subtitle(),
                 request.content(),
                 request.thumbnailUrl(),
-                request.status()
+                ArticleStatus.from(request.status())
         );
         Long articleId = articleService.create(command);
         return ResponseEntity.ok(CreateArticleResponse.draftFromId(articleId));
@@ -92,12 +96,13 @@ public class ArticleController {
                 request.subtitle(),
                 request.content(),
                 request.thumbnailUrl(),
-                request.status()
+                ArticleStatus.from(request.status())
         );
         UpdateArticleResponse updateArticleResponse = articleService.update(updateArticleCommand);
         return ResponseEntity.ok(updateArticleResponse);
 
     }
+
 
     @DeleteMapping("/{articleId}")
     public ResponseEntity<DeleteArticleResponse> deleteArticle(
