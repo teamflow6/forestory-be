@@ -28,6 +28,7 @@ public final class SecurityIgnorePath {
 
             // Auth
             new AntPathRequestMatcher("/api/v1/auth/reissue", HttpMethod.POST.name()),
+            new AntPathRequestMatcher("/api/v1/auth/firebase/login", HttpMethod.POST.name()),
 
             // Article
             new AntPathRequestMatcher("/api/v1/articles/**")
