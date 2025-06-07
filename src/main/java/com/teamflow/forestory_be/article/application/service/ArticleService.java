@@ -3,6 +3,7 @@ package com.teamflow.forestory_be.article.application.service;
 import com.teamflow.forestory_be.article.application.dto.command.CreateArticleCommand;
 import com.teamflow.forestory_be.article.application.dto.command.DeleteArticleCommand;
 import com.teamflow.forestory_be.article.application.dto.command.UpdateArticleCommand;
+import com.teamflow.forestory_be.article.application.dto.command.UpdateArticleStatusCommand;
 import com.teamflow.forestory_be.article.application.dto.query.GetArticleQuery;
 import com.teamflow.forestory_be.article.domain.entity.Article;
 import com.teamflow.forestory_be.article.domain.repository.ArticleRepositoryPort;
@@ -13,6 +14,7 @@ import com.teamflow.forestory_be.article.domain.vo.Title;
 import com.teamflow.forestory_be.article.presentation.dto.response.DeleteArticleResponse;
 import com.teamflow.forestory_be.article.presentation.dto.response.GetArticleResponse;
 import com.teamflow.forestory_be.article.presentation.dto.response.UpdateArticleResponse;
+import com.teamflow.forestory_be.article.presentation.dto.response.UpdateArticleStatusResponse;
 import com.teamflow.forestory_be.user.domain.entity.User;
 import com.teamflow.forestory_be.user.domain.repository.UserRepositoryPort;
 import lombok.RequiredArgsConstructor;
@@ -69,6 +71,17 @@ public class ArticleService {
         articleRepositoryPort.save(updatedArticle);
 
         return UpdateArticleResponse.from(command.articleId());
+    }
+
+    @Transactional
+    public UpdateArticleStatusResponse updateStatus(UpdateArticleStatusCommand command) {
+        Article existingArticle = articleRepositoryPort.getById(command.articleId());
+        existingArticle.validateOwnerOrThrow(command.authorId());
+
+        Article updatedArticle = existingArticle.updateStatus(command.status());
+        articleRepositoryPort.save(updatedArticle);
+
+        return UpdateArticleStatusResponse.from(updatedArticle);
     }
 
     @Transactional
