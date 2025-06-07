@@ -1,7 +1,10 @@
 package com.teamflow.forestory_be.auth.presentation;
 
 import com.teamflow.forestory_be.auth.application.AuthService;
+import com.teamflow.forestory_be.auth.application.FirebaseService;
 import com.teamflow.forestory_be.auth.application.dto.DeleteTokenCommand;
+import com.teamflow.forestory_be.auth.application.dto.FirebaseLoginCommand;
+import com.teamflow.forestory_be.auth.application.dto.IssueTokenCommand;
 import com.teamflow.forestory_be.auth.application.dto.ReissueTokenCommand;
 import com.teamflow.forestory_be.auth.infrastructure.jwt.JwtExtractor;
 import com.teamflow.forestory_be.auth.infrastructure.jwt.JwtProvider;
@@ -17,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,6 +35,7 @@ public class AuthController {
     private static final String REFRESH_TOKEN = "refresh_token";
 
     private final AuthService authService;
+    private final FirebaseService firebaseService;
     private final CookieHandler cookieHandler;
     private final JwtExtractor jwtExtractor;
     private final JwtProvider jwtProvider;
@@ -62,6 +67,19 @@ public class AuthController {
         response.addHeader(HttpHeaders.SET_COOKIE, expiredCookie.toString());
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/firebase/login")
+    public ResponseEntity<TokenResponse> firebaseLogin(
+        @RequestHeader("Authorization") String idToken,
+        HttpServletResponse response
+    ) {
+        String token = idToken.substring(7);
+        FirebaseLoginCommand command = firebaseService.verify(token);
+
+        Long userId = authService.firebaseLogin(command);
+        Long tokenId = authService.issueToken(new IssueTokenCommand(userId));
+        return createTokenResponse(userId, tokenId, response);
     }
 
     private ResponseEntity<TokenResponse> createTokenResponse(Long userId, Long tokenId, HttpServletResponse response) {
