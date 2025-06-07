@@ -3,15 +3,18 @@ package com.teamflow.forestory_be.article.presentation.controller;
 import com.teamflow.forestory_be.article.application.dto.command.CreateArticleCommand;
 import com.teamflow.forestory_be.article.application.dto.command.DeleteArticleCommand;
 import com.teamflow.forestory_be.article.application.dto.command.UpdateArticleCommand;
+import com.teamflow.forestory_be.article.application.dto.command.UpdateArticleStatusCommand;
 import com.teamflow.forestory_be.article.application.dto.query.GetArticleQuery;
 import com.teamflow.forestory_be.article.application.service.ArticleService;
 import com.teamflow.forestory_be.article.domain.vo.ArticleStatus;
 import com.teamflow.forestory_be.article.presentation.dto.request.CreateArticleRequest;
 import com.teamflow.forestory_be.article.presentation.dto.request.UpdateArticleRequest;
+import com.teamflow.forestory_be.article.presentation.dto.request.UpdateArticleStatusRequest;
 import com.teamflow.forestory_be.article.presentation.dto.response.CreateArticleResponse;
 import com.teamflow.forestory_be.article.presentation.dto.response.DeleteArticleResponse;
 import com.teamflow.forestory_be.article.presentation.dto.response.GetArticleResponse;
 import com.teamflow.forestory_be.article.presentation.dto.response.UpdateArticleResponse;
+import com.teamflow.forestory_be.article.presentation.dto.response.UpdateArticleStatusResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -98,6 +101,22 @@ public class ArticleController {
         UpdateArticleResponse updateArticleResponse = articleService.update(updateArticleCommand);
         return ResponseEntity.ok(updateArticleResponse);
 
+    }
+
+    @PatchMapping("{articleId}")
+    public ResponseEntity<UpdateArticleStatusResponse> updateArticleStatus(
+            @AuthenticationPrincipal Long userId,
+            @RequestBody @Valid UpdateArticleStatusRequest request,
+            @PathVariable @NotNull Long articleId
+    ) {
+        UpdateArticleStatusCommand updateArticleStatusCommand = new UpdateArticleStatusCommand(
+                articleId,
+                userId,
+                ArticleStatus.from(request.status())
+        );
+        UpdateArticleStatusResponse updateArticleStatusResponse = articleService.updateStatus(
+                updateArticleStatusCommand);
+        return ResponseEntity.ok(updateArticleStatusResponse);
     }
 
 
