@@ -35,6 +35,7 @@ public final class AuthUserPersistenceMapper {
                 .userId(authUser.getUserId())
                 .email(emailAuth.email())
                 .firebaseUid(emailAuth.firebaseUid())
+                .socialType(emailAuth.socialType())
                 .build();
         }
         SocialAuth socialAuth = (SocialAuth) authMethod;
