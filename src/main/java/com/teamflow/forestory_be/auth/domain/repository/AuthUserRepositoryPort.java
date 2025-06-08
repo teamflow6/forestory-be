@@ -10,7 +10,7 @@ public interface AuthUserRepositoryPort {
 
     AuthUser getByEmail(String email);
 
-    AuthUser getByFirebaseUid(String token);
+    Optional<AuthUser> getByFirebaseUid(String uid);
 
     Optional<AuthUser> getBySocialIdAndType(String socialId, SocialType socialType);
 }

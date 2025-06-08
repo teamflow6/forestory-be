@@ -30,10 +30,9 @@ public class AuthUserPersistenceAdapter implements AuthUserRepositoryPort {
     }
 
     @Override
-    public AuthUser getByFirebaseUid(String token) {
-        return authUserJpaRepository.findByFirebaseUid(token)
-            .map(AuthUserPersistenceMapper::toDomainEntity)
-            .orElseThrow(EntityNotFoundException::new);
+    public Optional<AuthUser> getByFirebaseUid(String uid) {
+        return authUserJpaRepository.findByFirebaseUid(uid)
+            .map(AuthUserPersistenceMapper::toDomainEntity);
     }
 
     @Override
