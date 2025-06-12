@@ -3,7 +3,7 @@ package com.teamflow.forestory_be.article.presentation.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record CreateArticleRequest(
+public record UpdateArticleRequest(
 
         @NotBlank(message = "제목은 필수입니다.")
         String title,
@@ -19,5 +19,4 @@ public record CreateArticleRequest(
         @NotNull
         String status
 ) {
-
 }

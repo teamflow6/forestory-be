@@ -5,7 +5,6 @@ import com.teamflow.forestory_be.article.domain.exception.ArticleNotFoundExcepti
 import com.teamflow.forestory_be.article.domain.repository.ArticleRepositoryPort;
 import com.teamflow.forestory_be.article.infrastructure.persistence.entity.ArticleJpaEntity;
 import com.teamflow.forestory_be.article.infrastructure.persistence.repository.ArticleJpaRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -26,8 +25,10 @@ public class ArticlePersistenceAdaptor implements ArticleRepositoryPort {
         ArticleJpaEntity articleJpaEntity = articleJpaRepository.findById(id)
                 .orElseThrow(ArticleNotFoundException::new);
         return ArticlePersistenceMapper.toDomainEntity(articleJpaEntity);
-
     }
 
-
+    @Override
+    public void deleteById(Long id) {
+        articleJpaRepository.deleteById(id);
+    }
 }

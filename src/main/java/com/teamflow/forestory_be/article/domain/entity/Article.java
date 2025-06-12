@@ -1,5 +1,7 @@
 package com.teamflow.forestory_be.article.domain.entity;
 
+import com.teamflow.forestory_be.article.domain.exception.InvalidArticleOwnerException;
+import com.teamflow.forestory_be.article.domain.exception.InvalidArticleStatusException;
 import com.teamflow.forestory_be.article.domain.vo.ArticleStatus;
 import com.teamflow.forestory_be.article.domain.vo.Content;
 import com.teamflow.forestory_be.article.domain.vo.Subtitle;
@@ -45,5 +47,37 @@ public class Article {
         return new Article(id, authorId, title, subtitle, content, thumbnailUrl, status);
     }
 
+    public Article update(Title title, Subtitle subtitle, Content content, String thumbnailUrl, ArticleStatus status) {
+        return new Article(
+                this.id,
+                this.authorId,
+                title,
+                subtitle,
+                content,
+                thumbnailUrl,
+                status
+        );
+    }
 
+    public Article updateStatus(ArticleStatus newStatus) {
+        if (this.status == newStatus) {
+            throw new InvalidArticleStatusException("이미 동일한 상태입니다.");
+        }
+        return new Article(
+                this.id,
+                this.authorId,
+                this.title,
+                this.subtitle,
+                this.content,
+                this.thumbnailUrl,
+                newStatus
+        );
+    }
+
+
+    public void validateOwnerOrThrow(Long userId) {
+        if (authorId != userId) {
+            throw new InvalidArticleOwnerException();
+        }
+    }
 }

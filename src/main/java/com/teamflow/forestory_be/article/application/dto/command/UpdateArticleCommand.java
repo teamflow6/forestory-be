@@ -2,7 +2,8 @@ package com.teamflow.forestory_be.article.application.dto.command;
 
 import com.teamflow.forestory_be.article.domain.vo.ArticleStatus;
 
-public record CreateArticleCommand(
+public record UpdateArticleCommand(
+        Long articleId,
         Long authorId,
         String title,
         String subtitle,
@@ -10,5 +11,4 @@ public record CreateArticleCommand(
         String thumbnailUrl,
         ArticleStatus status
 ) {
-
 }
