@@ -15,7 +15,7 @@ public record CreateSeriesRequest(
         @NotBlank(message = "타입은 필수입니다.")
         String type,
 
-        @NotBlank(message = "타입은 필수입니다.")
+        @NotBlank(message = "상태는 필수입니다.")
         String status
 ) {
 }
