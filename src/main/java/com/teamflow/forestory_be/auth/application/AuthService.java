@@ -1,6 +1,7 @@
 package com.teamflow.forestory_be.auth.application;
 
 import com.teamflow.forestory_be.auth.application.dto.DeleteTokenCommand;
+import com.teamflow.forestory_be.auth.application.dto.FirebaseLoginCommand;
 import com.teamflow.forestory_be.auth.application.dto.IssueTokenCommand;
 import com.teamflow.forestory_be.auth.application.dto.ReissueTokenCommand;
 import com.teamflow.forestory_be.auth.application.dto.SocialLoginCommand;
@@ -32,6 +33,13 @@ public class AuthService {
             .orElseGet(() -> createNewUser(command));
     }
 
+    @Transactional
+    public Long firebaseLogin(FirebaseLoginCommand command) {
+        return authUserRepositoryPort.getByFirebaseUid(command.firebaseUid())
+            .map(AuthUser::getUserId)
+            .orElseGet(() -> createNewFirebaseUser(command));
+    }
+
     public Long issueToken(IssueTokenCommand command) {
         Token token = Token.create(command.userId());
         return tokenRepositoryPort.save(token).getId();
@@ -51,6 +59,14 @@ public class AuthService {
         String name = RandomNameGenerator.generate().value();
         Long userId = userService.create(new CreateUserCommand(name, null));
         AuthUser authUser = AuthUser.createSocial(userId, command.socialId(), command.socialType());
+        authUserRepositoryPort.save(authUser);
+        return userId;
+    }
+
+    private Long createNewFirebaseUser(FirebaseLoginCommand command) {
+        String name = RandomNameGenerator.generate().value();
+        Long userId = userService.create(new CreateUserCommand(name, command.email()));
+        AuthUser authUser = AuthUser.createEmail(userId, command.email(), command.firebaseUid());
         authUserRepositoryPort.save(authUser);
         return userId;
     }
