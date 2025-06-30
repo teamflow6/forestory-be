@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/api/v1/users")
 public interface UserApi {
 
-    @Operation(summary = "내 프로필 조회", security = @SecurityRequirement(name = "JWT"))
+    @Operation(summary = "내 프로필 조회", security = @SecurityRequirement(name = "AccessToken"))
     @GetMapping("/me")
     ResponseEntity<UserProfileResponse> getMyProfile(
         @Parameter(hidden = true) @AuthenticationPrincipal Long userId
@@ -34,14 +34,14 @@ public interface UserApi {
         @PathVariable Long userId
     );
 
-    @Operation(summary = "온보딩 완료", security = @SecurityRequirement(name = "JWT"))
+    @Operation(summary = "온보딩 완료", security = @SecurityRequirement(name = "AccessToken"))
     @PutMapping("/profile")
     ResponseEntity<UserProfileResponse> completeOnboarding(
         @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
         @RequestBody UserOnboardingRequest request
     );
 
-    @Operation(summary = "프로필 수정", security = @SecurityRequirement(name = "JWT"))
+    @Operation(summary = "프로필 수정", security = @SecurityRequirement(name = "AccessToken"))
     @PatchMapping("/profile")
     ResponseEntity<UserProfileResponse> update(
         @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
