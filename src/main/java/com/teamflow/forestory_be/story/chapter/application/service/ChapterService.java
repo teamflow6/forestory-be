@@ -1,6 +1,7 @@
 package com.teamflow.forestory_be.story.chapter.application.service;
 
 import com.teamflow.forestory_be.story.chapter.application.dto.command.CreateChapterCommand;
+import com.teamflow.forestory_be.story.chapter.application.dto.command.UpdateChapterCommand;
 import com.teamflow.forestory_be.story.chapter.application.dto.query.GetChapterQuery;
 import com.teamflow.forestory_be.story.chapter.domain.entity.Chapter;
 import com.teamflow.forestory_be.story.chapter.domain.repository.ChapterRepositoryPort;
@@ -8,6 +9,7 @@ import com.teamflow.forestory_be.story.chapter.domain.vo.*;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.response.ChapterDetailResponse;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.response.CreateChapterResponse;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.response.GetChapterResponse;
+import com.teamflow.forestory_be.story.chapter.presentation.dto.response.UpdateChapterResponse;
 import com.teamflow.forestory_be.story.series.domain.entity.Series;
 import com.teamflow.forestory_be.story.series.domain.repository.SeriesRepositoryPort;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.AuthorResponse;
@@ -73,5 +75,28 @@ public class ChapterService {
 
         return GetChapterResponse.of(chapterDetailResponse, authorResponse);
     }
-}
 
+    @Transactional
+    public UpdateChapterResponse updateChapter(UpdateChapterCommand command) {
+        Chapter existingChapter = chapterRepositoryPort.getById(command.chapterId());
+
+        existingChapter.validateOwnerOrThrow(command.authorId());
+
+        Chapter updatedChapter = existingChapter.update(
+                new ChapterTitle(command.title()),
+                new ChapterSubtitle(command.subtitle()),
+                new ChapterBody(command.body()),
+                command.status(),
+                Optional.ofNullable(command.imageUrls()).orElse(List.of()),
+                command.chapterNumber()
+        );
+
+        chapterRepositoryPort.save(updatedChapter);
+
+        return UpdateChapterResponse.of(
+                updatedChapter.getId(),
+                updatedChapter.getSeriesId(),
+                updatedChapter.getChapterNumber()
+        );
+    }
+}
