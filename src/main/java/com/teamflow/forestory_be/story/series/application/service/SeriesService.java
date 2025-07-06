@@ -1,7 +1,9 @@
 package com.teamflow.forestory_be.story.series.application.service;
 
+import com.teamflow.forestory_be.article.domain.vo.Title;
 import com.teamflow.forestory_be.story.chapter.domain.repository.ChapterRepositoryPort;
 import com.teamflow.forestory_be.story.series.application.dto.command.CreateSeriesCommand;
+import com.teamflow.forestory_be.story.series.application.dto.command.UpdateSeriesCommand;
 import com.teamflow.forestory_be.story.series.application.dto.query.GetSeriesQuery;
 import com.teamflow.forestory_be.story.series.domain.entity.Series;
 import com.teamflow.forestory_be.story.series.domain.repository.SeriesRepositoryPort;
@@ -12,6 +14,7 @@ import com.teamflow.forestory_be.story.series.domain.vo.Type;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.ChapterResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.ChapterWithCreatedAt;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.GetSeriesResponse;
+import com.teamflow.forestory_be.story.series.presentation.dto.response.UpdateSeriesResponse;
 import com.teamflow.forestory_be.user.domain.entity.User;
 import com.teamflow.forestory_be.user.domain.repository.UserRepositoryPort;
 import java.util.List;
@@ -65,4 +68,21 @@ public class SeriesService {
         return GetSeriesResponse.of(series, chapterResponses, author);
     }
 
+    @Transactional
+    public UpdateSeriesResponse update(UpdateSeriesCommand command) {
+        Series existingSeries = seriesRepositoryPort.getById(command.seriesId());
+        existingSeries.validateOwnerOrThrow(command.authorId());
+
+        Series updatedSeries = existingSeries.update(
+                new SeriesTitle(command.title()),
+                new SeriesIntroduction(command.introduction()),
+                command.thumbnailUrl(),
+                command.type(),
+                command.seriesStatus()
+        );
+
+        seriesRepositoryPort.save(updatedSeries);
+
+        return UpdateSeriesResponse.from(command.seriesId());
+    }
 }
