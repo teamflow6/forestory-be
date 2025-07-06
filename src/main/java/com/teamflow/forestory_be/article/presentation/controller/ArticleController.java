@@ -56,23 +56,6 @@ public class ArticleController {
         return ResponseEntity.ok(CreateArticleResponse.createFromId(articleId));
     }
 
-    @PostMapping("/draft")
-    public ResponseEntity<CreateArticleResponse> draft(
-            @AuthenticationPrincipal Long userId,
-            @RequestBody @Valid CreateArticleRequest request
-    ) {
-        CreateArticleCommand command = new CreateArticleCommand(
-                userId,
-                request.title(),
-                request.subtitle(),
-                request.content(),
-                request.thumbnailUrl(),
-                ArticleStatus.from(request.status())
-        );
-        Long articleId = articleService.create(command);
-        return ResponseEntity.ok(CreateArticleResponse.draftFromId(articleId));
-    }
-
     @GetMapping("/{articleId}")
     public ResponseEntity<GetArticleResponse> getArticle(
             @AuthenticationPrincipal Long userId,
