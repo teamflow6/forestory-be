@@ -24,7 +24,7 @@ public class ImageController {
 
     @PostMapping
     public ResponseEntity<ImageUploadResponse> upload(
-            @AuthenticationPrincipal(expression = "username") Long userId,
+            @AuthenticationPrincipal Long userId,
             @RequestPart MultipartFile image
     ) {
         UploadImageCommand command = new UploadImageCommand(userId, image);
