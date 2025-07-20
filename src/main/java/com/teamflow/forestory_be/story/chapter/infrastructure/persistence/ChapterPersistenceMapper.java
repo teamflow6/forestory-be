@@ -1,11 +1,10 @@
-package com.teamflow.forestory_be.story.chapter.infrastructure.persisetence;
+package com.teamflow.forestory_be.story.chapter.infrastructure.persistence;
 
 import com.teamflow.forestory_be.story.chapter.domain.entity.Chapter;
 import com.teamflow.forestory_be.story.chapter.domain.vo.ChapterBody;
-import com.teamflow.forestory_be.story.chapter.domain.vo.ChapterStatus;
 import com.teamflow.forestory_be.story.chapter.domain.vo.ChapterSubtitle;
 import com.teamflow.forestory_be.story.chapter.domain.vo.ChapterTitle;
-import com.teamflow.forestory_be.story.chapter.infrastructure.persisetence.entity.ChapterJpaEntity;
+import com.teamflow.forestory_be.story.chapter.infrastructure.persistence.entity.ChapterJpaEntity;
 
 public class ChapterPersistenceMapper {
 

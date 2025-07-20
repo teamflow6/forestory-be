@@ -1,4 +1,4 @@
-package com.teamflow.forestory_be.story.chapter.infrastructure.persisetence.entity;
+package com.teamflow.forestory_be.story.chapter.infrastructure.persistence.entity;
 
 import com.teamflow.forestory_be.story.chapter.domain.vo.ChapterStatus;
 import com.teamflow.forestory_be.support.common.domain.BaseTimeEntity;
@@ -17,7 +17,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.checkerframework.checker.units.qual.C;
 
 @Getter
 @Entity

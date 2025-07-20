@@ -31,7 +31,6 @@ public class S3ImageUploader {
             PutObjectRequest request = PutObjectRequest.builder()
                     .bucket(bucket)
                     .key(fileName)
-                    .acl(ObjectCannedACL.PUBLIC_READ)
                     .contentType(file.getContentType())
                     .build();
 

@@ -1,22 +1,30 @@
 package com.teamflow.forestory_be.story.chapter.presentation.controller;
 
+import com.google.api.gax.rpc.UnauthenticatedException;
+import com.teamflow.forestory_be.auth.domain.entity.AuthUser;
+import com.teamflow.forestory_be.auth.infrastructure.security.oauth.CustomOAuth2User;
 import com.teamflow.forestory_be.story.chapter.application.dto.command.CreateChapterCommand;
+import com.teamflow.forestory_be.story.chapter.application.dto.query.GetChapterQuery;
 import com.teamflow.forestory_be.story.chapter.application.service.ChapterService;
 import com.teamflow.forestory_be.story.chapter.domain.vo.ChapterStatus;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.request.CreateChapterRequest;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.response.CreateChapterResponse;
+import com.teamflow.forestory_be.story.chapter.presentation.dto.response.GetChapterResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/v1/chapters")
+@RequestMapping("/api/v1/chapters")
 @RequiredArgsConstructor
 @Validated
 public class ChapterController {
@@ -41,4 +49,16 @@ public class ChapterController {
         return ResponseEntity.ok(response);
 
     }
+
+    @GetMapping("/{chapterId}")
+    public ResponseEntity<GetChapterResponse> getChapter(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long chapterId
+    ) {
+
+        GetChapterQuery query = new GetChapterQuery(chapterId, userId);
+        GetChapterResponse response = chapterService.getChapter(query);
+        return ResponseEntity.ok(response);
+    }
+
 }

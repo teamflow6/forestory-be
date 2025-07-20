@@ -17,6 +17,12 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
 dependencies {
     // Spring boot
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -61,6 +67,12 @@ dependencies {
 
     // JUnit
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // queryDSL
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 }
 
 tasks.named('test') {
@@ -69,4 +81,29 @@ tasks.named('test') {
 
 bootJar {
     archiveFileName = 'app.jar'
+}
+
+// Querydsl Q클래스 생성 경로 지정
+def querydslDir = "$buildDir/generated/querydsl"
+
+// Querydsl 설정
+tasks.withType(JavaCompile) {
+    options.getGeneratedSourceOutputDirectory().set(file(querydslDir))
+}
+
+// java source set에 querydsl Q클래스 추가
+sourceSets {
+    main.java.srcDirs += [querydslDir]
+}
+
+// gradle clean 시에 생성된 Q클래스 삭제
+clean {
+    delete file(querydslDir)
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
 }

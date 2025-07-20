@@ -6,9 +6,6 @@ public record CreateArticleResponse(
     public static CreateArticleResponse createFromId(Long articleId) {
         return new CreateArticleResponse(articleId);
     }
-
-    public static CreateArticleResponse draftFromId(Long articleId) {
-        return new CreateArticleResponse(articleId);
-    }
+    
 }
 
