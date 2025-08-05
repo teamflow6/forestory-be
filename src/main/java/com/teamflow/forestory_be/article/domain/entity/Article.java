@@ -38,6 +38,7 @@ public class Article {
 
     public static Article draft(Long authorId, Title title, Subtitle subtitle, Content content, String thumbnailUrl) {
         Long id = TsidGenerator.generate();
+        System.out.println(authorId);
         return new Article(id, authorId, title, subtitle, content, thumbnailUrl, ArticleStatus.DRAFT);
     }
 

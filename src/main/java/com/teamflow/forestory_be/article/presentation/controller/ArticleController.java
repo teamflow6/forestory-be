@@ -15,6 +15,7 @@ import com.teamflow.forestory_be.article.presentation.dto.response.DeleteArticle
 import com.teamflow.forestory_be.article.presentation.dto.response.GetArticleResponse;
 import com.teamflow.forestory_be.article.presentation.dto.response.UpdateArticleResponse;
 import com.teamflow.forestory_be.article.presentation.dto.response.UpdateArticleStatusResponse;
+import com.teamflow.forestory_be.auth.infrastructure.security.oauth.CustomOAuth2User;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
