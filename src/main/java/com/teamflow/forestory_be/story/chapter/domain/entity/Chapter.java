@@ -1,9 +1,11 @@
 package com.teamflow.forestory_be.story.chapter.domain.entity;
 
+import com.teamflow.forestory_be.story.chapter.domain.exception.InvalidChapterOwnerException;
 import com.teamflow.forestory_be.story.chapter.domain.vo.ChapterBody;
 import com.teamflow.forestory_be.story.chapter.domain.vo.ChapterStatus;
 import com.teamflow.forestory_be.story.chapter.domain.vo.ChapterSubtitle;
 import com.teamflow.forestory_be.story.chapter.domain.vo.ChapterTitle;
+import com.teamflow.forestory_be.story.series.domain.exception.InvalidSeriesOwnerException;
 import com.teamflow.forestory_be.support.common.util.TsidGenerator;
 import java.util.List;
 import java.util.Objects;
@@ -67,6 +69,28 @@ public class Chapter {
         int next = Integer.parseInt(lastChapterNumber) + 1;
         int digitLength = Math.max(MIN_DIGIT_LENGTH, String.valueOf(next).length());
         return String.format("%0" + digitLength + "d", next);
+    }
+
+    public Chapter update(ChapterTitle title, ChapterSubtitle subtitle, ChapterBody body,ChapterStatus status, List<String> imageUrls, String chapterNumber
+    ) {
+        return new Chapter(
+                this.id,
+                this.seriesId,
+                this.authorId,
+                title,
+                subtitle,
+                body,
+                imageUrls != null ? List.copyOf(imageUrls) : List.of(),
+                status,
+                chapterNumber
+        );
+    }
+
+
+    public void validateOwnerOrThrow(Long userId) {
+        if (authorId != userId) {
+            throw new InvalidChapterOwnerException();
+        }
     }
 
 
