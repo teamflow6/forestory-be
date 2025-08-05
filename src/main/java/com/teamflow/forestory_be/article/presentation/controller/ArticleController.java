@@ -15,12 +15,12 @@ import com.teamflow.forestory_be.article.presentation.dto.response.DeleteArticle
 import com.teamflow.forestory_be.article.presentation.dto.response.GetArticleResponse;
 import com.teamflow.forestory_be.article.presentation.dto.response.UpdateArticleResponse;
 import com.teamflow.forestory_be.article.presentation.dto.response.UpdateArticleStatusResponse;
-import com.teamflow.forestory_be.auth.infrastructure.security.oauth.CustomOAuth2User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -45,11 +45,10 @@ public class ArticleController {
 
     @PostMapping
     @Operation(summary = "아티클 등록", security = @SecurityRequirement(name = "AccessToken"))
-    public ResponseEntity<CreateArticleResponse> create(
+    public ResponseEntity<CreateArticleResponse> createArticle(
             @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
             @RequestBody @Valid CreateArticleRequest request
     ) {
-        System.out.println(userId);
         CreateArticleCommand command = new CreateArticleCommand(
                 userId,
                 request.title(),
@@ -65,8 +64,7 @@ public class ArticleController {
     @GetMapping("/{articleId}")
     @Operation(summary = "아티클 조회", security = @SecurityRequirement(name = "AccessToken"))
     public ResponseEntity<GetArticleResponse> getArticle(
-            @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
-            @PathVariable @NotNull Long articleId
+            @PathVariable @NotNull @Positive Long articleId
     ) {
         GetArticleQuery getArticleQuery = new GetArticleQuery(articleId);
         GetArticleResponse getArticleResponse = articleService.get(getArticleQuery);
@@ -78,7 +76,7 @@ public class ArticleController {
     public ResponseEntity<UpdateArticleResponse> updateArticle(
             @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
             @RequestBody @Valid UpdateArticleRequest request,
-            @PathVariable @NotNull Long articleId
+            @PathVariable @NotNull @Positive Long articleId
     ) {
         UpdateArticleCommand updateArticleCommand = new UpdateArticleCommand(
                 articleId,
@@ -119,8 +117,8 @@ public class ArticleController {
             @PathVariable @NotNull Long articleId
     ) {
         DeleteArticleCommand deleteArticleCommand = new DeleteArticleCommand(
-                userId,
-                articleId
+                articleId,
+                userId
         );
         DeleteArticleResponse deleteArticleResponse = articleService.delete(deleteArticleCommand);
         return ResponseEntity.ok(deleteArticleResponse);
