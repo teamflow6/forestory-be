@@ -6,6 +6,8 @@ import com.teamflow.forestory_be.user.domain.vo.UserStatus;
 import java.util.Objects;
 import lombok.Getter;
 
+// TODO: 테스트 이후 유저 상태 조건 검증 적
+
 @Getter
 public class User {
 
@@ -23,7 +25,7 @@ public class User {
 
     public User completeOnboarding(Long userId, Name name, String profileImageUrl) {
         validateUser(userId);
-        validateStatus(UserStatus.ONBOARDING);
+        // validateStatus(UserStatus.ONBOARDING);
         return new User(
             this.id,
             updateIfDifferent(name, this.name),
