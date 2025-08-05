@@ -27,7 +27,7 @@ public class ArticlePersistenceMapper {
     public static ArticleJpaEntity toJpaEntity(Article article) {
         return ArticleJpaEntity.builder()
                 .id(article.getId())
-                .authorId(article.getId())
+                .authorId(article.getAuthorId())
                 .title(article.getTitle().value())
                 .subtitle(article.getSubtitle().value())
                 .content(article.getContent().value())

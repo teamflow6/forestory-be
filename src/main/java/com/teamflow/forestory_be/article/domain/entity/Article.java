@@ -76,7 +76,7 @@ public class Article {
 
 
     public void validateOwnerOrThrow(Long userId) {
-        if (authorId != userId) {
+        if (!authorId.equals(userId)) {
             throw new InvalidArticleOwnerException();
         }
     }
