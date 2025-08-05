@@ -16,6 +16,9 @@ import com.teamflow.forestory_be.article.presentation.dto.response.GetArticleRes
 import com.teamflow.forestory_be.article.presentation.dto.response.UpdateArticleResponse;
 import com.teamflow.forestory_be.article.presentation.dto.response.UpdateArticleStatusResponse;
 import com.teamflow.forestory_be.auth.infrastructure.security.oauth.CustomOAuth2User;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -41,10 +44,12 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @PostMapping
+    @Operation(summary = "아티클 등록", security = @SecurityRequirement(name = "AccessToken"))
     public ResponseEntity<CreateArticleResponse> create(
-            @AuthenticationPrincipal Long userId,
+            @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
             @RequestBody @Valid CreateArticleRequest request
     ) {
+        System.out.println(userId);
         CreateArticleCommand command = new CreateArticleCommand(
                 userId,
                 request.title(),
@@ -58,8 +63,9 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}")
+    @Operation(summary = "아티클 조회", security = @SecurityRequirement(name = "AccessToken"))
     public ResponseEntity<GetArticleResponse> getArticle(
-            @AuthenticationPrincipal Long userId,
+            @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
             @PathVariable @NotNull Long articleId
     ) {
         GetArticleQuery getArticleQuery = new GetArticleQuery(articleId);
@@ -68,8 +74,9 @@ public class ArticleController {
     }
 
     @PutMapping("/{articleId}")
+    @Operation(summary = "아티클 수정", security = @SecurityRequirement(name = "AccessToken"))
     public ResponseEntity<UpdateArticleResponse> updateArticle(
-            @AuthenticationPrincipal Long userId,
+            @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
             @RequestBody @Valid UpdateArticleRequest request,
             @PathVariable @NotNull Long articleId
     ) {
@@ -88,8 +95,9 @@ public class ArticleController {
     }
 
     @PatchMapping("{articleId}")
+    @Operation(summary = "아티클 상태 수정", security = @SecurityRequirement(name = "AccessToken"))
     public ResponseEntity<UpdateArticleStatusResponse> updateArticleStatus(
-            @AuthenticationPrincipal Long userId,
+            @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
             @RequestBody @Valid UpdateArticleStatusRequest request,
             @PathVariable @NotNull Long articleId
     ) {
@@ -105,6 +113,7 @@ public class ArticleController {
 
 
     @DeleteMapping("/{articleId}")
+    @Operation(summary = "아티클 삭제", security = @SecurityRequirement(name = "AccessToken"))
     public ResponseEntity<DeleteArticleResponse> deleteArticle(
             @AuthenticationPrincipal Long userId,
             @PathVariable @NotNull Long articleId
