@@ -11,6 +11,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -55,5 +56,8 @@ public class ChapterJpaEntity extends BaseTimeEntity {
     private ChapterStatus status;
 
     @Column(name = "chapter_number", nullable = false, length = 10)
-    private String chapterNumber;
+    private Integer chapterNumber;
+
+    @Column(name = "published_at")
+    private LocalDate publishedAt;
 }

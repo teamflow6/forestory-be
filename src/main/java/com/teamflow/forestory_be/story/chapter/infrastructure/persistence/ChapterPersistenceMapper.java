@@ -19,9 +19,9 @@ public class ChapterPersistenceMapper {
                 new ChapterTitle(entity.getTitle()),
                 new ChapterSubtitle(entity.getSubtitle()),
                 new ChapterBody(entity.getBody()),
-                entity.getImageUrls(),
                 entity.getStatus(),
-                entity.getChapterNumber()
+                entity.getChapterNumber(),     // int
+                entity.getPublishedAt()        // LocalDate (nullable)
         );
     }
 
@@ -33,7 +33,6 @@ public class ChapterPersistenceMapper {
                 .title(chapter.getTitle().value())
                 .subtitle(chapter.getSubtitle().value())
                 .body(chapter.getBody().value())
-                .imageUrls(chapter.getImageUrls())
                 .status(chapter.getStatus())
                 .chapterNumber(chapter.getChapterNumber())
                 .build();

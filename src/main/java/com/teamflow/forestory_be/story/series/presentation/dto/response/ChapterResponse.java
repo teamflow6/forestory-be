@@ -16,7 +16,7 @@ public record ChapterResponse(
         LocalDateTime createdAt = chapterWithCreatedAt.createdAt();
         return new ChapterResponse(
                 chapter.getId(),
-                Integer.parseInt(chapter.getChapterNumber()),
+                chapter.getChapterNumber(),
                 chapter.getTitle().value(),
                 chapter.getSubtitle().value(),
                 createdAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))

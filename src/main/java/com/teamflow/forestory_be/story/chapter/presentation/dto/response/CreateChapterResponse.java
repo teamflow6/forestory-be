@@ -1,13 +1,11 @@
 package com.teamflow.forestory_be.story.chapter.presentation.dto.response;
 
-import com.teamflow.forestory_be.story.chapter.domain.entity.Chapter;
-
 public record CreateChapterResponse(
-        Long chapterId,
-        Long seriesId,
-        String chapterNumber
+        String chapterId,
+        String seriesId,
+        int chapterNumber
 ) {
-    public static CreateChapterResponse of(Long chapterId, Long seriesId, String chapterNumber) {
-        return new CreateChapterResponse(chapterId, seriesId, chapterNumber);
+    public static CreateChapterResponse of(Long chapterId, Long seriesId, int chapterNumber) {
+        return new CreateChapterResponse(String.valueOf(chapterId), String.valueOf(seriesId), chapterNumber);
     }
 }

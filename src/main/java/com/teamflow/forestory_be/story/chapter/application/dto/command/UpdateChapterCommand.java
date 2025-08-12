@@ -11,7 +11,6 @@ public record UpdateChapterCommand(
         String subtitle,
         String body,
         ChapterStatus status,
-        List<String> imageUrls,
-        String chapterNumber
+        int chapterNumber
 ) {
 }
