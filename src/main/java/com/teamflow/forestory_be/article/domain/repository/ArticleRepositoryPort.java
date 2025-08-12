@@ -1,6 +1,7 @@
 package com.teamflow.forestory_be.article.domain.repository;
 
 import com.teamflow.forestory_be.article.domain.entity.Article;
+import java.util.List;
 
 public interface ArticleRepositoryPort {
 
@@ -9,4 +10,6 @@ public interface ArticleRepositoryPort {
     Article getById(Long id);
 
     void deleteById(Long id);
+
+    List<Article> findRandomPublishedByAuthor(Long authorId, Long excludeArticleId, int limit);
 }

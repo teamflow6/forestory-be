@@ -34,4 +34,7 @@ public class UserJpaEntity extends BaseTimeEntity {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private UserStatus status;
+
+    @Column(name = "introduction")
+    private String introduction;
 }

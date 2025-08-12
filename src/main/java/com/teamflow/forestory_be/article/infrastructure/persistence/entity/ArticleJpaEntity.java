@@ -35,7 +35,7 @@ public class ArticleJpaEntity extends BaseTimeEntity {
     @Column(name = "subtitle", nullable = false)
     private String subtitle;
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @Column(name = "thumbnail_url")

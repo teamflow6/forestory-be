@@ -13,7 +13,11 @@ import com.teamflow.forestory_be.story.chapter.presentation.dto.request.UpdateCh
 import com.teamflow.forestory_be.story.chapter.presentation.dto.response.CreateChapterResponse;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.response.GetChapterResponse;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.response.UpdateChapterResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticatedPrincipal;
@@ -36,8 +40,9 @@ public class ChapterController {
     private final ChapterService chapterService;
 
     @PostMapping
+    @Operation(summary = "챕터 등록", security = @SecurityRequirement(name = "AccessToken"))
     public ResponseEntity<CreateChapterResponse> createChapter(
-            @AuthenticationPrincipal Long userId,
+            @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
             @RequestBody @Valid CreateChapterRequest request
     ) {
         CreateChapterCommand command = new CreateChapterCommand(
@@ -46,7 +51,6 @@ public class ChapterController {
                 request.chapterTitle(),
                 request.chapterSubtitle(),
                 request.chapterBody(),
-                request.imageUrls(),
                 ChapterStatus.from(request.status())
         );
         CreateChapterResponse response = chapterService.createChapter(command);
@@ -55,8 +59,9 @@ public class ChapterController {
     }
 
     @GetMapping("/{chapterId}")
+    @Operation(summary = "챕터 조회", security = @SecurityRequirement(name = "AccessToken"))
     public ResponseEntity<GetChapterResponse> getChapter(
-            @AuthenticationPrincipal Long userId,
+            @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
             @PathVariable Long chapterId
     ) {
 
@@ -66,9 +71,10 @@ public class ChapterController {
     }
 
     @PutMapping("/{chapterId}")
+    @Operation(summary = "챕터 수정", security = @SecurityRequirement(name = "AccessToken"))
     public ResponseEntity<UpdateChapterResponse> updateChapter(
-            @AuthenticationPrincipal Long userId,
-            @PathVariable Long chapterId,
+            @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
+            @NotNull @PathVariable Long chapterId,
             @RequestBody @Valid UpdateChapterRequest request
     ) {
         UpdateChapterCommand command = new UpdateChapterCommand(
@@ -79,7 +85,6 @@ public class ChapterController {
                 request.subtitle(),
                 request.body(),
                 ChapterStatus.from(request.status()),
-                request.imageUrls(),
                 request.chapterNumber()
         );
 

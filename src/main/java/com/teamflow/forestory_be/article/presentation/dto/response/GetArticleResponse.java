@@ -5,7 +5,7 @@ import com.teamflow.forestory_be.user.domain.entity.User;
 
 public record GetArticleResponse(
 
-        Long articleId,
+        String articleId,
         String title,
         String subtitle,
         String content,
@@ -15,7 +15,7 @@ public record GetArticleResponse(
 ) {
     public static GetArticleResponse of(Article article, User author) {
         return new GetArticleResponse(
-                article.getId(),
+                String.valueOf(article.getId()),
                 article.getTitle().value(),
                 article.getSubtitle().value(),
                 article.getContent().value(),

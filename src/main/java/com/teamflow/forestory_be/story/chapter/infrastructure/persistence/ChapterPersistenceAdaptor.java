@@ -4,6 +4,7 @@ import com.teamflow.forestory_be.story.chapter.domain.entity.Chapter;
 import com.teamflow.forestory_be.story.chapter.domain.repository.ChapterRepositoryPort;
 import com.teamflow.forestory_be.story.chapter.infrastructure.persistence.entity.ChapterJpaEntity;
 import com.teamflow.forestory_be.story.chapter.infrastructure.persistence.repository.ChapterJpaRepository;
+import com.teamflow.forestory_be.story.chapter.presentation.dto.response.NeighborChapter;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.ChapterWithCreatedAt;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -22,16 +23,13 @@ public class ChapterPersistenceAdaptor implements ChapterRepositoryPort {
     }
 
     @Override
-    public String findLastChapterNumber(Long seriesId) {
-        return chapterJpaRepository.findTopBySeriesIdOrderByChapterNumberDesc(seriesId)
-                .map(ChapterPersistenceMapper::toDomainEntity)
-                .map(Chapter::getChapterNumber)
-                .orElse("00");
+    public Integer findLastChapterNumber(Long seriesId) {
+        Integer max = chapterJpaRepository.findMaxChapterNumber(seriesId);
+        return (max == null || max == 0) ? null : max;
     }
 
     @Override
-    public List<ChapterWithCreatedAt> findPublishedChaptersWithScroll(Long seriesId, String sort,
-                                                                      String lastChapterNumber, int size) {
+    public List<ChapterWithCreatedAt> findPublishedChaptersWithScroll(Long seriesId, String sort, int lastChapterNumber, int size) {
         return chapterJpaRepository.findChaptersBySeriesIdWithScroll(seriesId, sort, lastChapterNumber, size);
     }
 
@@ -42,4 +40,17 @@ public class ChapterPersistenceAdaptor implements ChapterRepositoryPort {
         return ChapterPersistenceMapper.toDomainEntity(entity);
     }
 
+    @Override
+    public List<NeighborChapter> findAroundPublishedChapters(Long seriesId, int currentChapterNumber, int nextCount) {
+        return chapterJpaRepository.findAroundPublishedChapters(
+                seriesId, currentChapterNumber, nextCount
+        );
+    }
+    @Override
+    public List<Chapter> findRandomPublishedByAuthor(Long authorId, Long excludeChapterId, int limit) {
+        return chapterJpaRepository.pickRandomByAuthor(authorId, excludeChapterId, limit)
+                .stream()
+                .map(ChapterPersistenceMapper::toDomainEntity)
+                .toList();
+    }
 }

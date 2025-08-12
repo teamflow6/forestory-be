@@ -5,6 +5,7 @@ import com.teamflow.forestory_be.article.domain.exception.ArticleNotFoundExcepti
 import com.teamflow.forestory_be.article.domain.repository.ArticleRepositoryPort;
 import com.teamflow.forestory_be.article.infrastructure.persistence.entity.ArticleJpaEntity;
 import com.teamflow.forestory_be.article.infrastructure.persistence.repository.ArticleJpaRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -30,5 +31,13 @@ public class ArticlePersistenceAdaptor implements ArticleRepositoryPort {
     @Override
     public void deleteById(Long id) {
         articleJpaRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Article> findRandomPublishedByAuthor(Long authorId, Long excludeArticleId, int limit) {
+        return articleJpaRepository.pickRandomByAuthor(authorId, excludeArticleId, limit)
+                .stream()
+                .map(ArticlePersistenceMapper::toDomainEntity)
+                .toList();
     }
 }

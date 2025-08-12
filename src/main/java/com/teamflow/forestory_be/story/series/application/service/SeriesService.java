@@ -57,7 +57,7 @@ public class SeriesService {
                 .findPublishedChaptersWithScroll(
                         query.seriesId(),
                         query.sort(),
-                        String.valueOf(query.lastChapterNumber()),
+                        query.lastChapterNumber(),
                         query.size()
                 );
 
