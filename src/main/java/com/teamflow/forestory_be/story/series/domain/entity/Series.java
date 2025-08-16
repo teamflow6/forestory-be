@@ -41,12 +41,6 @@ public class Series {
     public static Series create(Long authorId, SeriesTitle title, SeriesIntroduction introduction,
                                 String thumbnailUrl, Type type) {
         Long id = TsidGenerator.generate();
-        return new Series(id, authorId, title, introduction, thumbnailUrl, type, SeriesStatus.DRAFT_OVERVIEW);
-    }
-
-    public static Series draft(Long authorId, SeriesTitle title, SeriesIntroduction introduction,
-                               String thumbnailUrl, Type type) {
-        Long id = TsidGenerator.generate();
         return new Series(id, authorId, title, introduction, thumbnailUrl, type, SeriesStatus.PENDING_FIRST_CHAPTER);
     }
 
