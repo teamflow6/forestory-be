@@ -57,6 +57,7 @@ public class UserController implements UserApi {
         OnboardingUserCommand command = new OnboardingUserCommand(
             userId,
             request.name(),
+            request.introduction(),
             request.profileUrl()
         );
         User user = userService.completeOnboarding(command);
@@ -72,6 +73,7 @@ public class UserController implements UserApi {
         UpdateUserCommand command = new UpdateUserCommand(
             userId,
             request.name(),
+            request.introduction(),
             request.profileUrl()
         );
         User user = userService.update(command);

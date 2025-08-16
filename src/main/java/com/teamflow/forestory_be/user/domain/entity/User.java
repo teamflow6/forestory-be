@@ -24,14 +24,14 @@ public class User {
         this.introduction = introduction; // <- 세팅(초기엔 null 가능)
     }
 
-    public User completeOnboarding(Long userId, Name name, String profileImageUrl) {
+    public User completeOnboarding(Long userId, Name name, Introduction introduction, String profileImageUrl) {
         validateUser(userId);
         return new User(
                 this.id,
                 updateIfDifferent(name, this.name),
                 updateIfDifferent(profileImageUrl, this.profileImageUrl),
                 UserStatus.ACTIVE,
-                this.introduction
+                updateIfDifferent(introduction, this.introduction)
         );
     }
 
@@ -62,11 +62,11 @@ public class User {
 
     public static User create(Name name, String profileImageUrl) {
         Long id = TsidGenerator.generate();
-        return new User(id, name, profileImageUrl, UserStatus.ONBOARDING, null);
+        return new User(id, name, profileImageUrl, UserStatus.ONBOARDING, new Introduction(""));
     }
 
     public static User reconstruct(Long id, Name name, String profileImageUrl, UserStatus status, Introduction introduction) {
-        return new User(id, name, profileImageUrl, status, introduction);
+        return new User(id, name, profileImageUrl, status, introduction != null ? introduction : new Introduction(""));
     }
 
     private void validateUser(Long userId) {

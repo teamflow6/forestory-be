@@ -8,6 +8,7 @@ import com.teamflow.forestory_be.user.application.dto.UpdateUserCommand;
 import com.teamflow.forestory_be.user.domain.entity.User;
 import com.teamflow.forestory_be.user.domain.exception.UserNameDuplicatedException;
 import com.teamflow.forestory_be.user.domain.repository.UserRepositoryPort;
+import com.teamflow.forestory_be.user.domain.vo.Introduction;
 import com.teamflow.forestory_be.user.domain.vo.Name;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,8 +35,9 @@ public class UserService {
         User user = userRepositoryPort.getById(command.userId());
         Name name = new Name(command.name());
         validateNameDuplicated(name);
+        Introduction introduction = new Introduction(command.introduction());
 
-        User updatedUser = user.completeOnboarding(command.userId(), name, command.profileImageUrl());
+        User updatedUser = user.completeOnboarding(command.userId(), name, introduction,command.profileImageUrl());
         userRepositoryPort.save(updatedUser);
         return updatedUser;
     }
