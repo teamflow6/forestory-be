@@ -35,17 +35,11 @@ public class SeriesService {
         SeriesTitle title = new SeriesTitle(command.seriesTitle());
         SeriesIntroduction introduction = new SeriesIntroduction(command.introduction());
         Type type = Type.from(command.type());
-        if (command.status() == SeriesStatus.DRAFT_OVERVIEW) {
-            Series series = Series.draft(command.authorId(), title, introduction, command.thumbnailUrl(), type);
-            seriesRepositoryPort.save(series);
-            return series.getId();
-        } else {
 
-            Series series = Series.create(command.authorId(), title, introduction, command.thumbnailUrl(), type);
+        Series series = Series.create(command.authorId(), title, introduction, command.thumbnailUrl(), type);
+        seriesRepositoryPort.save(series);
 
-            seriesRepositoryPort.save(series);
-            return series.getId();
-        }
+        return series.getId();
     }
 
     @Transactional(readOnly = true)
@@ -62,7 +56,7 @@ public class SeriesService {
                 );
 
         List<ChapterResponse> chapterResponses = publishedChapters.stream()
-                .map(ChapterResponse::from)  // ChapterResponse.from(ChapterWithCreatedAt) 필요
+                .map(ChapterResponse::from)
                 .toList();
 
         return GetSeriesResponse.of(series, chapterResponses, author);

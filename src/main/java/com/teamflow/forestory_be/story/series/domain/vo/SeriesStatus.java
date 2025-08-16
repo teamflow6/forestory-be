@@ -3,7 +3,7 @@ package com.teamflow.forestory_be.story.series.domain.vo;
 import com.teamflow.forestory_be.story.series.domain.exception.InvalidSeriesStatusException;
 
 public enum SeriesStatus {
-    DRAFT_OVERVIEW, PENDING_FIRST_CHAPTER, PUBLISHED, COMPLETED;
+    PENDING_FIRST_CHAPTER, PUBLISHED, COMPLETED;
 
     public static SeriesStatus from(String value) {
         try {
