@@ -7,7 +7,6 @@ import com.teamflow.forestory_be.story.chapter.domain.vo.ChapterSubtitle;
 import com.teamflow.forestory_be.story.chapter.domain.vo.ChapterTitle;
 import com.teamflow.forestory_be.support.common.util.TsidGenerator;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Objects;
 import lombok.Getter;
 

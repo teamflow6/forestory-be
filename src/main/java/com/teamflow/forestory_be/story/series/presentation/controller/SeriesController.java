@@ -1,6 +1,9 @@
 package com.teamflow.forestory_be.story.series.presentation.controller;
 
+import com.teamflow.forestory_be.story.series.application.dto.command.CompleteSeriesCommand;
 import com.teamflow.forestory_be.story.series.application.dto.command.CreateSeriesCommand;
+import com.teamflow.forestory_be.story.series.application.dto.command.DeleteLatestChapterCommand;
+import com.teamflow.forestory_be.story.series.application.dto.command.DeleteSeriesCommand;
 import com.teamflow.forestory_be.story.series.application.dto.command.UpdateSeriesCommand;
 import com.teamflow.forestory_be.story.series.application.dto.query.GetSeriesQuery;
 import com.teamflow.forestory_be.story.series.application.service.SeriesService;
@@ -8,7 +11,10 @@ import com.teamflow.forestory_be.story.series.domain.vo.SeriesStatus;
 import com.teamflow.forestory_be.story.series.domain.vo.Type;
 import com.teamflow.forestory_be.story.series.presentation.dto.request.CreateSeriesRequest;
 import com.teamflow.forestory_be.story.series.presentation.dto.request.UpdateSeriesRequest;
+import com.teamflow.forestory_be.story.series.presentation.dto.response.CompleteSeriesResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.CreateSeriesResponse;
+import com.teamflow.forestory_be.story.series.presentation.dto.response.DeleteChapterResponse;
+import com.teamflow.forestory_be.story.series.presentation.dto.response.DeleteSeriesResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.GetSeriesResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.UpdateSeriesResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -72,7 +78,7 @@ public class SeriesController {
             @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
             @RequestBody @Valid UpdateSeriesRequest request,
             @PathVariable @NotNull Long seriesId
-    ){
+    ) {
         UpdateSeriesCommand updateSeriesCommand = new UpdateSeriesCommand(
                 seriesId,
                 userId,
@@ -85,4 +91,42 @@ public class SeriesController {
         UpdateSeriesResponse updateSeriesResponse = seriesService.update(updateSeriesCommand);
         return ResponseEntity.ok(updateSeriesResponse);
     }
+
+    @PutMapping("/{seriesId}/complete")
+    @Operation(summary = "시리즈 연재 완료 처리", security = @SecurityRequirement(name = "AccessToken"))
+    public ResponseEntity<CompleteSeriesResponse> completeSeries(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable @NotNull Long seriesId
+    ) {
+        CompleteSeriesCommand command = new CompleteSeriesCommand(seriesId, userId);
+        CompleteSeriesResponse response = seriesService.completeSeries(command);
+        return ResponseEntity.ok(response);
+    }
+
+
+    @DeleteMapping("/{seriesId}")
+    @Operation(summary = "시리즈 삭제", security = @SecurityRequirement(name = "AccessToken"))
+    public ResponseEntity<DeleteSeriesResponse> deleteSeries(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable @NotNull Long seriesId
+    ) {
+        DeleteSeriesCommand deleteSeriesCommand = new DeleteSeriesCommand(
+                seriesId,
+                userId
+        );
+        DeleteSeriesResponse deleteSeriesResponse = seriesService.delete(deleteSeriesCommand);
+        return ResponseEntity.ok(deleteSeriesResponse);
+    }
+
+    @DeleteMapping("/{seriesId}/chapters/latest")
+    @Operation(summary = "시리즈의 최신 챕터 삭제", security = @SecurityRequirement(name = "AccessToken"))
+    public ResponseEntity<DeleteChapterResponse> deleteLatestChapter(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable @NotNull Long seriesId
+    ) {
+        DeleteLatestChapterCommand command = new DeleteLatestChapterCommand(seriesId, userId);
+        DeleteChapterResponse response = seriesService.deleteLatestChapter(command);
+        return ResponseEntity.ok(response);
+    }
+
 }

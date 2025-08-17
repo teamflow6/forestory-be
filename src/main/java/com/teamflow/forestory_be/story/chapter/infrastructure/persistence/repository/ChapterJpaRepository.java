@@ -20,4 +20,10 @@ public interface ChapterJpaRepository extends JpaRepository<ChapterJpaEntity, Lo
         LIMIT :limit
         """, nativeQuery = true)
     List<ChapterJpaEntity> pickRandomByAuthor(Long authorId, Long excludeId, int limit);
+
+    void deleteBySeriesId(Long seriesId);
+
+    @Query("SELECT c FROM ChapterJpaEntity c WHERE c.seriesId = :seriesId ORDER BY c.chapterNumber DESC")
+    ChapterJpaEntity findTopBySeriesIdOrderByChapterNumberDesc(Long seriesId);
+
 }

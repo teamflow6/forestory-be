@@ -1,8 +1,12 @@
 package com.teamflow.forestory_be.story.series.application.service;
 
 import com.teamflow.forestory_be.article.domain.vo.Title;
+import com.teamflow.forestory_be.story.chapter.domain.entity.Chapter;
 import com.teamflow.forestory_be.story.chapter.domain.repository.ChapterRepositoryPort;
+import com.teamflow.forestory_be.story.series.application.dto.command.CompleteSeriesCommand;
 import com.teamflow.forestory_be.story.series.application.dto.command.CreateSeriesCommand;
+import com.teamflow.forestory_be.story.series.application.dto.command.DeleteLatestChapterCommand;
+import com.teamflow.forestory_be.story.series.application.dto.command.DeleteSeriesCommand;
 import com.teamflow.forestory_be.story.series.application.dto.command.UpdateSeriesCommand;
 import com.teamflow.forestory_be.story.series.application.dto.query.GetSeriesQuery;
 import com.teamflow.forestory_be.story.series.domain.entity.Series;
@@ -13,6 +17,9 @@ import com.teamflow.forestory_be.story.series.domain.vo.SeriesTitle;
 import com.teamflow.forestory_be.story.series.domain.vo.Type;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.ChapterResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.ChapterWithCreatedAt;
+import com.teamflow.forestory_be.story.series.presentation.dto.response.CompleteSeriesResponse;
+import com.teamflow.forestory_be.story.series.presentation.dto.response.DeleteChapterResponse;
+import com.teamflow.forestory_be.story.series.presentation.dto.response.DeleteSeriesResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.GetSeriesResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.UpdateSeriesResponse;
 import com.teamflow.forestory_be.user.domain.entity.User;
@@ -79,4 +86,51 @@ public class SeriesService {
 
         return UpdateSeriesResponse.from(command.seriesId());
     }
+
+    @Transactional
+    public CompleteSeriesResponse completeSeries(CompleteSeriesCommand command) {
+        Series series = seriesRepositoryPort.getById(command.seriesId());
+
+        series.validateOwnerOrThrow(command.authorId());
+
+        // 새로운 Series 반환
+        Series updated = series.changeStatus(SeriesStatus.COMPLETED);
+
+        // DB에 반영
+        seriesRepositoryPort.save(updated);
+
+        return CompleteSeriesResponse.of(updated.getId(), updated.getSeriesStatus().toString());
+    }
+
+
+    @Transactional
+    public DeleteSeriesResponse delete(DeleteSeriesCommand command) {
+        Series series = seriesRepositoryPort.getById(command.seriesId());
+
+        series.validateOwnerOrThrow(command.authorId());
+
+        chapterRepositoryPort.deleteAllBySeriesId(command.seriesId());
+        seriesRepositoryPort.deleteById(command.seriesId());
+
+        return DeleteSeriesResponse.from(command.seriesId());
+    }
+
+    @Transactional
+    public DeleteChapterResponse deleteLatestChapter(DeleteLatestChapterCommand command) {
+        // 시리즈 가져오기
+        Series series = seriesRepositoryPort.getById(command.seriesId());
+        series.validateOwnerOrThrow(command.authorId());
+
+        // 최신 챕터 찾기 (예: number 기준 desc 정렬 후 첫 번째)
+        Chapter latestChapter = chapterRepositoryPort
+                .findTopBySeriesIdOrderByChapterNumberDesc(command.seriesId());
+
+
+        // 삭제
+        chapterRepositoryPort.delete(latestChapter);
+
+        return DeleteChapterResponse.of(latestChapter.getId(), command.seriesId());
+    }
+
 }
+

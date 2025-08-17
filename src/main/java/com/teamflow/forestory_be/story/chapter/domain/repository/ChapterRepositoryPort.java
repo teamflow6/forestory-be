@@ -17,4 +17,10 @@ public interface ChapterRepositoryPort {
     List<NeighborChapter> findAroundPublishedChapters(Long seriesId, int currentChapterNumber,int nextCount);
 
     List<Chapter> findRandomPublishedByAuthor(Long authorId, Long excludeChapterId, int limit);
+
+    void deleteAllBySeriesId(Long seriesId);
+
+    Chapter findTopBySeriesIdOrderByChapterNumberDesc(Long seriesId);
+
+    void delete(Chapter chapter);
 }
