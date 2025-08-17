@@ -53,4 +53,24 @@ public class ChapterPersistenceAdaptor implements ChapterRepositoryPort {
                 .map(ChapterPersistenceMapper::toDomainEntity)
                 .toList();
     }
+
+    @Override
+    public void deleteAllBySeriesId(Long seriesId) {
+        chapterJpaRepository.deleteBySeriesId(seriesId);
+    }
+
+    @Override
+    public Chapter findTopBySeriesIdOrderByChapterNumberDesc(Long seriesId) {
+        ChapterJpaEntity entity = chapterJpaRepository.findTopBySeriesIdOrderByChapterNumberDesc(seriesId);
+        if (entity == null) {
+            throw new IllegalArgumentException("No chapter found for seriesId: " + seriesId);
+        }
+        return ChapterPersistenceMapper.toDomainEntity(entity);
+    }
+
+    @Override
+    public void delete(Chapter chapter) {
+        chapterJpaRepository.deleteById(chapter.getId());
+    }
+
 }

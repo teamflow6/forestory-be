@@ -27,4 +27,7 @@ public class SeriesPersistenceAdaptor implements SeriesRepositoryPort {
         return SeriesPersistenceMapper.toDomainEntity(seriesJpaEntity);
 
     }
+
+    @Override
+    public void deleteById(Long id) { seriesJpaRepository.deleteById(id); }
 }

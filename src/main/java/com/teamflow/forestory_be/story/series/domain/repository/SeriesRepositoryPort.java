@@ -7,4 +7,6 @@ public interface SeriesRepositoryPort {
     void save(Series series);
 
     Series getById(Long id);
+
+    void deleteById(Long id);
 }

@@ -57,12 +57,20 @@ public class Series {
     }
 
     public void validateOwnerOrThrow(Long userId) {
-        if (authorId != userId) {
+        if (!authorId.equals(userId)) {
             throw new InvalidSeriesOwnerException();
         }
     }
 
-
-
-
+    public Series changeStatus(SeriesStatus status) {
+        return new Series(
+                this.id,
+                this.authorId,
+                this.title,
+                this.introduction,
+                this.thumbnailUrl,
+                this.type,
+                status
+        );
+    }
 }
