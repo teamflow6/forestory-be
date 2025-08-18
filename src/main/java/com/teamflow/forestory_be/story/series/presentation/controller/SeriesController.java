@@ -5,6 +5,8 @@ import com.teamflow.forestory_be.story.series.application.dto.command.CreateSeri
 import com.teamflow.forestory_be.story.series.application.dto.command.DeleteLatestChapterCommand;
 import com.teamflow.forestory_be.story.series.application.dto.command.DeleteSeriesCommand;
 import com.teamflow.forestory_be.story.series.application.dto.command.UpdateSeriesCommand;
+import com.teamflow.forestory_be.story.series.application.dto.query.GetNextChapterInfoQuery;
+import com.teamflow.forestory_be.story.series.application.dto.query.GetSeriesListQuery;
 import com.teamflow.forestory_be.story.series.application.dto.query.GetSeriesQuery;
 import com.teamflow.forestory_be.story.series.application.service.SeriesService;
 import com.teamflow.forestory_be.story.series.domain.vo.SeriesStatus;
@@ -15,6 +17,8 @@ import com.teamflow.forestory_be.story.series.presentation.dto.response.Complete
 import com.teamflow.forestory_be.story.series.presentation.dto.response.CreateSeriesResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.DeleteChapterResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.DeleteSeriesResponse;
+import com.teamflow.forestory_be.story.series.presentation.dto.response.GetNextChapterInfoResponse;
+import com.teamflow.forestory_be.story.series.presentation.dto.response.GetSeriesListResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.GetSeriesResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.UpdateSeriesResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,6 +26,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -61,7 +66,6 @@ public class SeriesController {
             security = @SecurityRequirement(name = "AccessToken")
     )
     public ResponseEntity<GetSeriesResponse> getSeries(
-            @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
             @PathVariable @NotNull Long seriesId,
             @Parameter(description = "asc: 첫 화부터, desc: 최신순") @RequestParam(defaultValue = "asc") String sort,
             @Parameter(description = "마지막으로 본 챕터 번호(무한스크롤 기준점)") @RequestParam(required = false) Integer lastChapterNumber,
@@ -71,6 +75,35 @@ public class SeriesController {
         GetSeriesResponse getSeriesResponse = seriesService.getSeries(query);
         return ResponseEntity.ok(getSeriesResponse);
     }
+
+    @GetMapping("/{seriesId}/next-chapter")
+    @Operation(summary = "다음 회차 정보 조회", security = @SecurityRequirement(name = "AccessToken"))
+    public ResponseEntity<GetNextChapterInfoResponse> getNextChapterInfo(
+            @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
+            @PathVariable @NotNull Long seriesId
+    ) {
+        GetNextChapterInfoQuery query = new GetNextChapterInfoQuery(userId, seriesId);
+        GetNextChapterInfoResponse response = seriesService.getNextChapterInfo(query);
+        return ResponseEntity.ok(response);
+    }
+
+
+    @GetMapping
+    @Operation(
+            summary = "시리즈 목록 조회",
+            security = @SecurityRequirement(name = "AccessToken")
+    )
+    public ResponseEntity<List<GetSeriesListResponse>> getSeriesList(
+            @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
+            @Parameter(description = "마지막으로 본 챕터 번호(무한스크롤 기준점)") @RequestParam(required = false) Integer lastSeriesNumber,
+            @Parameter(description = "가져올 개수") @RequestParam(defaultValue = "5") int size,
+            @Parameter(description = "시리즈 타입(all/NOVEL/ESSAY)") @RequestParam String type
+    ) {
+        GetSeriesListQuery query = new GetSeriesListQuery(userId, lastSeriesNumber, size, type);
+        List<GetSeriesListResponse> responses = seriesService.getSeriesList(query);
+        return ResponseEntity.ok(responses);
+    }
+
 
     @PutMapping("/{seriesId}")
     @Operation(summary = "시리즈 수정", security = @SecurityRequirement(name = "AccessToken"))
@@ -92,7 +125,7 @@ public class SeriesController {
         return ResponseEntity.ok(updateSeriesResponse);
     }
 
-    @PutMapping("/{seriesId}/complete")
+    @PatchMapping("/{seriesId}/complete")
     @Operation(summary = "시리즈 연재 완료 처리", security = @SecurityRequirement(name = "AccessToken"))
     public ResponseEntity<CompleteSeriesResponse> completeSeries(
             @AuthenticationPrincipal Long userId,
