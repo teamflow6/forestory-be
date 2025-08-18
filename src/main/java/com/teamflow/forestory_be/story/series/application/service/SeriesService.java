@@ -8,6 +8,8 @@ import com.teamflow.forestory_be.story.series.application.dto.command.CreateSeri
 import com.teamflow.forestory_be.story.series.application.dto.command.DeleteLatestChapterCommand;
 import com.teamflow.forestory_be.story.series.application.dto.command.DeleteSeriesCommand;
 import com.teamflow.forestory_be.story.series.application.dto.command.UpdateSeriesCommand;
+import com.teamflow.forestory_be.story.series.application.dto.query.GetNextChapterInfoQuery;
+import com.teamflow.forestory_be.story.series.application.dto.query.GetSeriesListQuery;
 import com.teamflow.forestory_be.story.series.application.dto.query.GetSeriesQuery;
 import com.teamflow.forestory_be.story.series.domain.entity.Series;
 import com.teamflow.forestory_be.story.series.domain.repository.SeriesRepositoryPort;
@@ -20,6 +22,8 @@ import com.teamflow.forestory_be.story.series.presentation.dto.response.ChapterW
 import com.teamflow.forestory_be.story.series.presentation.dto.response.CompleteSeriesResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.DeleteChapterResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.DeleteSeriesResponse;
+import com.teamflow.forestory_be.story.series.presentation.dto.response.GetNextChapterInfoResponse;
+import com.teamflow.forestory_be.story.series.presentation.dto.response.GetSeriesListResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.GetSeriesResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.UpdateSeriesResponse;
 import com.teamflow.forestory_be.user.domain.entity.User;
@@ -68,6 +72,35 @@ public class SeriesService {
 
         return GetSeriesResponse.of(series, chapterResponses, author);
     }
+
+    @Transactional(readOnly = true)
+    public GetNextChapterInfoResponse getNextChapterInfo(GetNextChapterInfoQuery query) {
+        // 시리즈 존재 여부 검증
+        Series series = seriesRepositoryPort.getById(query.seriesId());
+
+        // 최신 회차 번호 조회 (없으면 0)
+        Integer lastChapterNumber = chapterRepositoryPort.findLastChapterNumber(series.getId());
+
+        return GetNextChapterInfoResponse.of(
+                series.getId().toString(),
+                series.getTitle().value(),
+                lastChapterNumber + 1
+        );
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<GetSeriesListResponse> getSeriesList(GetSeriesListQuery query) {
+
+        if ("all".equalsIgnoreCase(query.type())) {
+            return seriesRepositoryPort.findByUserId(query.userId(), query.lastSeriesNumber(), query.size());
+        } else {
+            Type type = Type.from(query.type());
+            return seriesRepositoryPort.findByUserIdAndType(query.userId(), type, query.lastSeriesNumber(),
+                    query.size());
+        }
+    }
+
 
     @Transactional
     public UpdateSeriesResponse update(UpdateSeriesCommand command) {
