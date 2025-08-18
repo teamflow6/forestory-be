@@ -35,8 +35,6 @@ public class ReqResLoggingFilter extends OncePerRequestFilter {
             String logMessage = HttpLogMessage.create(cachingRequestWrapper, cachingResponseWrapper, elapsedTime)
                 .toPrettierLog();
             log.info(logMessage);
-
-            // response body를 다시 복사해줘야 실제 응답이 클라이언트로 전달됨
             cachingResponseWrapper.copyBodyToResponse();
         } catch (Exception ex) {
             log.error("[{}] Failure Logging: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
