@@ -1,6 +1,9 @@
 package com.teamflow.forestory_be.story.series.domain.repository;
 
 import com.teamflow.forestory_be.story.series.domain.entity.Series;
+import com.teamflow.forestory_be.story.series.domain.vo.Type;
+import com.teamflow.forestory_be.story.series.presentation.dto.response.GetSeriesListResponse;
+import java.util.List;
 
 public interface SeriesRepositoryPort {
 
@@ -9,4 +12,8 @@ public interface SeriesRepositoryPort {
     Series getById(Long id);
 
     void deleteById(Long id);
+
+    List<GetSeriesListResponse> findByUserId(Long userId, Integer lastSeriesNumber, int size);
+
+    List<GetSeriesListResponse> findByUserIdAndType(Long userId, Type type, Integer lastSeriesNumber, int size);
 }
