@@ -79,3 +79,11 @@ firebase:
 springdoc:
   swagger-ui:
     path: /swagger-ui
+
+management:
+  server:
+    port: 9000
+  endpoints:
+    web:
+      exposure:
+        include: ${ACTUATOR_INCLUDE:health,prometheus}
