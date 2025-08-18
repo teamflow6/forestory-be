@@ -19,12 +19,13 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "com.teamflow.forestory_be")
 public class GlobalExceptionAdvice {
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<BaseErrorResponse> handleCustomException(CustomException ex) {
         log.warn(ex.getLocalizedMessage());
+
 
         BaseErrorResponse body = new BaseErrorResponse(ex.getCode(), ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
