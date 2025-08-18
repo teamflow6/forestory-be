@@ -31,7 +31,10 @@ public final class SecurityIgnorePath {
             new AntPathRequestMatcher("/api/v1/auth/firebase/login", HttpMethod.POST.name()),
 
             // Article
-            new AntPathRequestMatcher("/api/v1/articles/**")
+            new AntPathRequestMatcher("/api/v1/articles/**"),
+
+            // Actuator
+            new AntPathRequestMatcher("/actuator/**", HttpMethod.GET.name())
         );
         return new OrRequestMatcher(matchers);
     }
