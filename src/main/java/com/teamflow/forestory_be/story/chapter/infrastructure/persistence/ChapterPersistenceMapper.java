@@ -19,6 +19,7 @@ public class ChapterPersistenceMapper {
                 new ChapterTitle(entity.getTitle()),
                 new ChapterSubtitle(entity.getSubtitle()),
                 new ChapterBody(entity.getBody()),
+                entity.getThumbnailUrl(),
                 entity.getStatus(),
                 entity.getChapterNumber(),     // int
                 entity.getPublishedAt()        // LocalDate (nullable)

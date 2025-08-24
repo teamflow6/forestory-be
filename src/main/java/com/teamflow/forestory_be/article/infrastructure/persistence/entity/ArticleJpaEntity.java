@@ -45,5 +45,9 @@ public class ArticleJpaEntity extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ArticleStatus status;
 
+    @Builder.Default
+    @Column(name = "like_count", nullable = false)
+    private long likeCount = 0L;
+
 
 }

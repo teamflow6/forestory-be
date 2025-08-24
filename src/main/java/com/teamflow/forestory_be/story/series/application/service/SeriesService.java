@@ -132,7 +132,7 @@ public class SeriesService {
         // DB에 반영
         seriesRepositoryPort.save(updated);
 
-        return CompleteSeriesResponse.of(updated.getId(), updated.getSeriesStatus().toString());
+        return CompleteSeriesResponse.of(updated.getId().toString(), updated.getSeriesStatus().toString());
     }
 
 
