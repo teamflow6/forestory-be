@@ -8,6 +8,7 @@ import com.teamflow.forestory_be.article.infrastructure.persistence.repository.A
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -39,5 +40,23 @@ public class ArticlePersistenceAdaptor implements ArticleRepositoryPort {
                 .stream()
                 .map(ArticlePersistenceMapper::toDomainEntity)
                 .toList();
+    }
+
+    @Transactional
+    @Override
+    public void increaseLikeCount(Long articleId) {
+        int updated = articleJpaRepository.increaseLikeCount(articleId);
+        if (updated == 0) {
+            throw new ArticleNotFoundException();
+        }
+    }
+
+    @Transactional
+    @Override
+    public void decreaseLikeCount(Long articleId) {
+        int updated = articleJpaRepository.decreaseLikeCount(articleId);
+        if (updated == 0) {
+            throw new ArticleNotFoundException();
+        }
     }
 }

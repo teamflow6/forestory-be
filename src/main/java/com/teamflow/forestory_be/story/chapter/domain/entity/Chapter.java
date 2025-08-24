@@ -18,13 +18,14 @@ public class Chapter {
     private final ChapterTitle title;
     private final ChapterSubtitle subtitle;
     private final ChapterBody body;
+    private final String thumbnailUrl;
     private final ChapterStatus status;
     private final int chapterNumber;
     // 발행 시점 (PUBLISHED일 때만 값 존재)
     private final LocalDate publishedAt;
 
     private Chapter(Long id, Long seriesId, Long authorId,
-                    ChapterTitle title, ChapterSubtitle subtitle, ChapterBody body,
+                    ChapterTitle title, ChapterSubtitle subtitle, ChapterBody body, String thumbnailUrl,
                      ChapterStatus status,
                     int chapterNumber, LocalDate publishedAt) {
         this.id = Objects.requireNonNull(id);
@@ -33,6 +34,7 @@ public class Chapter {
         this.title = Objects.requireNonNull(title);
         this.subtitle = Objects.requireNonNull(subtitle);
         this.body = Objects.requireNonNull(body);
+        this.thumbnailUrl = thumbnailUrl;
         this.status = Objects.requireNonNull(status);
         this.chapterNumber = chapterNumber;
         // DRAFT이면 null, PUBLISHED면 값
@@ -44,30 +46,29 @@ public class Chapter {
     /** DB 재구성용 */
     public static Chapter reconstruct(Long id, Long seriesId, Long authorId,
                                       ChapterTitle title, ChapterSubtitle subtitle,
-                                      ChapterBody body,
+                                      ChapterBody body,String thumbnailUrl,
                                       ChapterStatus status, int chapterNumber,
                                       LocalDate publishedAt) {
-        return new Chapter(id, seriesId, authorId, title, subtitle, body,
-                status, chapterNumber, publishedAt);
+        return new Chapter(id, seriesId, authorId, title, subtitle, body, thumbnailUrl, status, chapterNumber, publishedAt);
     }
 
     /** 발행 생성 */
     public static Chapter createPublished(Long seriesId, Long authorId,
                                           ChapterTitle title, ChapterSubtitle subtitle,
-                                          ChapterBody body,
+                                          ChapterBody body,String thumbnailUrl,
                                           int chapterNumber) {
         Long id = TsidGenerator.generate();
-        return new Chapter(id, seriesId, authorId, title, subtitle, body,
+        return new Chapter(id, seriesId, authorId, title, subtitle, body,thumbnailUrl,
                 ChapterStatus.PUBLISHED, chapterNumber, LocalDate.now());
     }
 
     /** 초안 생성 */
     public static Chapter createDraft(Long seriesId, Long authorId,
                                       ChapterTitle title, ChapterSubtitle subtitle,
-                                      ChapterBody body,
+                                      ChapterBody body,String thumbnailUrl,
                                       int chapterNumber) {
         Long id = TsidGenerator.generate();
-        return new Chapter(id, seriesId, authorId, title, subtitle, body,
+        return new Chapter(id, seriesId, authorId, title, subtitle, body, thumbnailUrl,
                 ChapterStatus.DRAFT, chapterNumber, null);
     }
 
@@ -90,6 +91,7 @@ public class Chapter {
                 title,
                 subtitle,
                 body,
+                thumbnailUrl,
                 status,
                 chapterNumber,
                 nextPublishedAt

@@ -52,11 +52,11 @@ public class ChapterService {
         Chapter chapter;
         if (status == ChapterStatus.DRAFT) {
             chapter = Chapter.createDraft(
-                    command.seriesId(), command.authorId(), title, subtitle, body, nextNumber
+                    command.seriesId(), command.authorId(), title, subtitle, body, command.thumnnailUrl(), nextNumber
             );
         } else {
             chapter = Chapter.createPublished(
-                    command.seriesId(), command.authorId(), title, subtitle, body, nextNumber
+                    command.seriesId(), command.authorId(), title, subtitle, body, command.thumnnailUrl(), nextNumber
             );
         }
 

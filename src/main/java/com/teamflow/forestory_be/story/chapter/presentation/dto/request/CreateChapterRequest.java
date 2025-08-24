@@ -3,8 +3,6 @@ package com.teamflow.forestory_be.story.chapter.presentation.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import java.util.List;
 
 @Schema(description = "챕터 생성 요청 DTO")
 public record CreateChapterRequest(
@@ -40,6 +38,13 @@ public record CreateChapterRequest(
         )
         @NotBlank(message = "본문 내용은 필수입니다.")
         String chapterBody,
+
+        @Schema(
+                description = "챕터 썸네일 이미지 URL",
+                example = "https://example.com/images/chapter-thumbnail.jpg",
+                requiredMode = Schema.RequiredMode.NOT_REQUIRED
+        )
+        String thumbnailUrl,
 
         @Schema(
                 description = "게시 상태 (DRAFT 또는 PUBLISHED)",

@@ -1,5 +1,7 @@
 package com.teamflow.forestory_be.story.chapter.infrastructure.persistence;
 
+import com.teamflow.forestory_be.article.domain.exception.ArticleNotFoundException;
+import com.teamflow.forestory_be.article.infrastructure.persistence.repository.ArticleJpaRepository;
 import com.teamflow.forestory_be.story.chapter.domain.entity.Chapter;
 import com.teamflow.forestory_be.story.chapter.domain.repository.ChapterRepositoryPort;
 import com.teamflow.forestory_be.story.chapter.infrastructure.persistence.entity.ChapterJpaEntity;
@@ -9,12 +11,14 @@ import com.teamflow.forestory_be.story.series.presentation.dto.response.ChapterW
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
 public class ChapterPersistenceAdaptor implements ChapterRepositoryPort {
 
     private final ChapterJpaRepository chapterJpaRepository;
+    private final ArticleJpaRepository articleJpaRepository;
 
     @Override
     public void save(Chapter chapter) {
@@ -73,4 +77,21 @@ public class ChapterPersistenceAdaptor implements ChapterRepositoryPort {
         chapterJpaRepository.deleteById(chapter.getId());
     }
 
+    @Transactional
+    @Override
+    public void increaseLikeCount(Long chapterId) {
+        int updated = chapterJpaRepository.increaseLikeCount(chapterId);
+        if (updated == 0) {
+            throw new IllegalArgumentException("Chapter not found with id: " + chapterId);
+        }
+    }
+
+    @Transactional
+    @Override
+    public void decreaseLikeCount(Long chapterId) {
+        int updated = chapterJpaRepository.decreaseLikeCount(chapterId);
+        if (updated == 0) {
+            throw new IllegalArgumentException("Chapter not found with id: " + chapterId);
+        }
+    }
 }

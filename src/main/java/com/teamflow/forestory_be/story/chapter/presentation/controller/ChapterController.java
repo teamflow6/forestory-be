@@ -51,6 +51,7 @@ public class ChapterController {
                 request.chapterTitle(),
                 request.chapterSubtitle(),
                 request.chapterBody(),
+                request.thumbnailUrl(),
                 ChapterStatus.from(request.status())
         );
         CreateChapterResponse response = chapterService.createChapter(command);

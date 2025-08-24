@@ -12,4 +12,8 @@ public interface ArticleRepositoryPort {
     void deleteById(Long id);
 
     List<Article> findRandomPublishedByAuthor(Long authorId, Long excludeArticleId, int limit);
+
+    void increaseLikeCount(Long articleId);
+
+    void decreaseLikeCount(Long articleId);
 }

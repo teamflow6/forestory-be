@@ -2,22 +2,9 @@ package com.teamflow.forestory_be.story.chapter.infrastructure.persistence.entit
 
 import com.teamflow.forestory_be.story.chapter.domain.vo.ChapterStatus;
 import com.teamflow.forestory_be.support.common.domain.BaseTimeEntity;
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Entity
@@ -46,10 +33,8 @@ public class ChapterJpaEntity extends BaseTimeEntity {
     @Column(name = "body", nullable = false)
     private String body;
 
-    @ElementCollection
-    @CollectionTable(name = "chapter_images", joinColumns = @JoinColumn(name = "chapter_id"))
-    @Column(name = "image_url")
-    private List<String> imageUrls;
+    @Column(name = "thumbnailUrl")
+    private String thumbnailUrl;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -60,4 +45,8 @@ public class ChapterJpaEntity extends BaseTimeEntity {
 
     @Column(name = "published_at")
     private LocalDate publishedAt;
+
+    @Builder.Default
+    @Column(name = "like_count", nullable = false)
+    private long likeCount = 0L;
 }

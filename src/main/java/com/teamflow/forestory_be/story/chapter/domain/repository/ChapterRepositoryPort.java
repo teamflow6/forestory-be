@@ -4,6 +4,9 @@ import com.teamflow.forestory_be.story.chapter.domain.entity.Chapter;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.response.NeighborChapter;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.ChapterWithCreatedAt;
 import java.util.List;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface ChapterRepositoryPort {
     void save(Chapter chapter);
@@ -23,4 +26,8 @@ public interface ChapterRepositoryPort {
     Chapter findTopBySeriesIdOrderByChapterNumberDesc(Long seriesId);
 
     void delete(Chapter chapter);
+
+    void increaseLikeCount(Long articleId);
+
+    void decreaseLikeCount(Long articleId);
 }
