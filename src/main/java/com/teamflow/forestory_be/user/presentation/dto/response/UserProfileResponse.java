@@ -6,7 +6,8 @@ public record UserProfileResponse(
     Long userId,
     String name,
     String introduction,
-    String profileImageUrl
+    String profileImageUrl,
+    String contactUrl
 ) {
 
     public static UserProfileResponse from(User user) {
@@ -14,7 +15,8 @@ public record UserProfileResponse(
             user.getId(),
             user.getName().value(),
             user.getIntroduction().value(),
-            user.getProfileImageUrl()
+            user.getProfileImageUrl().value(),
+            user.getContactUrl().value()
         );
     }
 }
