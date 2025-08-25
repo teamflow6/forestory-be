@@ -3,6 +3,7 @@ package com.teamflow.forestory_be.story.series.application.service;
 import com.teamflow.forestory_be.article.domain.vo.Title;
 import com.teamflow.forestory_be.story.chapter.domain.entity.Chapter;
 import com.teamflow.forestory_be.story.chapter.domain.repository.ChapterRepositoryPort;
+import com.teamflow.forestory_be.story.chapter.domain.vo.ChapterStatus;
 import com.teamflow.forestory_be.story.series.application.dto.command.CompleteSeriesCommand;
 import com.teamflow.forestory_be.story.series.application.dto.command.CreateSeriesCommand;
 import com.teamflow.forestory_be.story.series.application.dto.command.DeleteLatestChapterCommand;
@@ -70,7 +71,10 @@ public class SeriesService {
                 .map(ChapterResponse::from)
                 .toList();
 
-        return GetSeriesResponse.of(series, chapterResponses, author);
+        long seriesLikeCount = chapterRepositoryPort
+                .sumLikeCountBySeriesAndStatus(query.seriesId(), ChapterStatus.PUBLISHED);
+
+        return GetSeriesResponse.of(series, chapterResponses, author,seriesLikeCount);
     }
 
     @Transactional(readOnly = true)
@@ -162,7 +166,7 @@ public class SeriesService {
         // 삭제
         chapterRepositoryPort.delete(latestChapter);
 
-        return DeleteChapterResponse.of(latestChapter.getId(), command.seriesId());
+        return DeleteChapterResponse.of(latestChapter.getId().toString(), command.seriesId().toString());
     }
 
 }

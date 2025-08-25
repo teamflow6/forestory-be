@@ -19,8 +19,6 @@ import com.teamflow.forestory_be.story.chapter.presentation.dto.response.AuthorR
 import com.teamflow.forestory_be.user.domain.entity.User;
 import com.teamflow.forestory_be.user.domain.repository.UserRepositoryPort;
 import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,8 +37,6 @@ public class ChapterService {
 
     @Transactional
     public CreateChapterResponse createChapter(CreateChapterCommand command) {
-
-
         Integer lastNumber = chapterRepositoryPort.findLastChapterNumber(command.seriesId());
         int nextNumber = (lastNumber == null) ? 1 : lastNumber + 1;
 
@@ -52,11 +48,11 @@ public class ChapterService {
         Chapter chapter;
         if (status == ChapterStatus.DRAFT) {
             chapter = Chapter.createDraft(
-                    command.seriesId(), command.authorId(), title, subtitle, body, command.thumnnailUrl(), nextNumber
+                    command.seriesId(), command.authorId(), title, subtitle, body, command.thumbnailUrl(), nextNumber
             );
         } else {
             chapter = Chapter.createPublished(
-                    command.seriesId(), command.authorId(), title, subtitle, body, command.thumnnailUrl(), nextNumber
+                    command.seriesId(), command.authorId(), title, subtitle, body, command.thumbnailUrl(), nextNumber
             );
         }
 
@@ -70,21 +66,17 @@ public class ChapterService {
         Series series = seriesRepositoryPort.getById(chapter.getSeriesId());
         User author = userRepositoryPort.getById(chapter.getAuthorId());
 
-
-        // 현재 포함 + 다음 4개 (총 5개)
         List<NeighborChapter> around = chapterRepositoryPort.findAroundPublishedChapters(
                 chapter.getSeriesId(), chapter.getChapterNumber(), 4
         );
 
-        boolean articlesThree = ThreadLocalRandom.current().nextBoolean(); // true -> (3,2), false -> (2,3)
+        boolean articlesThree = ThreadLocalRandom.current().nextBoolean();
         int wantArticles = articlesThree ? 3 : 2;
-        int wantChapters = 5 - wantArticles; // 2 또는 3
+        int wantChapters = 5 - wantArticles;
 
-        // 섞지 않음: 아티클 먼저, 그 다음 챕터
         List<RandomAuthorContentResponse> picks = new ArrayList<>(5);
         picks.addAll(pickRandomArticles(author.getId(), null, wantArticles));
         picks.addAll(pickRandomChapters(author.getId(), chapter.getId(), wantChapters));
-
 
         return GetChapterResponse.of(
                 ChapterDetailResponse.of(chapter, series),
@@ -94,17 +86,16 @@ public class ChapterService {
         );
     }
 
-
     @Transactional
     public UpdateChapterResponse updateChapter(UpdateChapterCommand command) {
         Chapter existingChapter = chapterRepositoryPort.getById(command.chapterId());
-
         existingChapter.validateOwnerOrThrow(command.authorId());
 
         Chapter updatedChapter = existingChapter.update(
                 new ChapterTitle(command.title()),
                 new ChapterSubtitle(command.subtitle()),
                 new ChapterBody(command.body()),
+                command.thumbnailUrl(),
                 command.status(),
                 command.chapterNumber()
         );
@@ -126,7 +117,6 @@ public class ChapterService {
                 .toList();
     }
 
-    /** 챕터: DB에서 RAND()로 want개 랜덤 (현재 챕터 제외) */
     private List<RandomAuthorContentResponse> pickRandomChapters(Long authorId, Long excludeChapterId, int want) {
         if (want <= 0) return List.of();
         return chapterRepositoryPort.findRandomPublishedByAuthor(authorId, excludeChapterId, want)

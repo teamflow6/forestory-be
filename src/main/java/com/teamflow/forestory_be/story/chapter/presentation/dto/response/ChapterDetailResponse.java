@@ -10,18 +10,19 @@ public record ChapterDetailResponse(
         String chapterSubtitle,
         String body,
         Long seriesId,
-        String seriesTitle
+        String seriesTitle,
+        long likeCount
 ) {
     public static ChapterDetailResponse of(Chapter chapter, Series series) {
         return new ChapterDetailResponse(
                 String.valueOf(chapter.getId()),
                 chapter.getChapterNumber(),
-                chapter.getTitle().value(),                                // 그냥 get으로 꺼냄
-                chapter.getSubtitle().value(),                             // nullable 처리 없음
-                chapter.getBody().value(),                                 // 마찬가지로 가공 없이 get
+                chapter.getTitle().value(),
+                chapter.getSubtitle().value(),
+                chapter.getBody().value(),
                 series.getId(),
-                series.getTitle().value()
+                series.getTitle().value(),
+                chapter.getLikeCount()
         );
     }
-
 }

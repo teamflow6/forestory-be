@@ -95,11 +95,11 @@ public class SeriesController {
     )
     public ResponseEntity<List<GetSeriesListResponse>> getSeriesList(
             @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
-            @Parameter(description = "마지막으로 본 챕터 번호(무한스크롤 기준점)") @RequestParam(required = false) Integer lastSeriesNumber,
+            @Parameter(description = "마지막으로 본 챕터 번호(무한스크롤 기준점)") @RequestParam(required = false) Integer lastChapterNumber,
             @Parameter(description = "가져올 개수") @RequestParam(defaultValue = "5") int size,
             @Parameter(description = "시리즈 타입(all/NOVEL/ESSAY)") @RequestParam String type
     ) {
-        GetSeriesListQuery query = new GetSeriesListQuery(userId, lastSeriesNumber, size, type);
+        GetSeriesListQuery query = new GetSeriesListQuery(userId, lastChapterNumber, size, type);
         List<GetSeriesListResponse> responses = seriesService.getSeriesList(query);
         return ResponseEntity.ok(responses);
     }

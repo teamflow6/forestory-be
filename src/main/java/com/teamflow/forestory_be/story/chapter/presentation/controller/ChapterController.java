@@ -85,6 +85,7 @@ public class ChapterController {
                 request.title(),
                 request.subtitle(),
                 request.body(),
+                request.thumbnailUrl(),
                 ChapterStatus.from(request.status()),
                 request.chapterNumber()
         );

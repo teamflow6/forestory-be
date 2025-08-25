@@ -4,10 +4,10 @@ import lombok.Builder;
 
 @Builder
 public record DeleteChapterResponse(
-        Long deletedChapterId,
-        Long seriesId
+        String deletedChapterId,
+        String seriesId
 ) {
-    public static DeleteChapterResponse of(Long deletedChapterId, Long seriesId) {
+    public static DeleteChapterResponse of(String deletedChapterId, String seriesId) {
         return new DeleteChapterResponse(deletedChapterId, seriesId);
     }
 }
