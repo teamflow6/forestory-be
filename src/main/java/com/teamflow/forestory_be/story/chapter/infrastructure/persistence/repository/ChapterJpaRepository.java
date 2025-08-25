@@ -2,8 +2,12 @@ package com.teamflow.forestory_be.story.chapter.infrastructure.persistence.repos
 
 import com.teamflow.forestory_be.story.chapter.domain.vo.ChapterStatus;
 import com.teamflow.forestory_be.story.chapter.infrastructure.persistence.entity.ChapterJpaEntity;
+import com.teamflow.forestory_be.story.series.domain.vo.Type;
+import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -52,4 +56,35 @@ public interface ChapterJpaRepository extends JpaRepository<ChapterJpaEntity, Lo
     """)
     Long sumLikeCountBySeriesAndStatus(@Param("seriesId") Long seriesId,
                                        @Param("status") ChapterStatus status);
+
+    @Query(value = """
+    SELECT c.*
+    FROM chapters c
+    JOIN series s ON s.series_id = c.series_id
+    WHERE c.author_id = :userId
+      AND c.status = 'DRAFT'
+      AND (:cursor IS NULL OR c.created_at < :cursor)
+      AND s.type = :type            -- 'NOVEL' 또는 'ESSAY'
+    ORDER BY c.created_at DESC
+    LIMIT :limit
+    """, nativeQuery = true)
+    List<ChapterJpaEntity> sliceChaptersBySeriesType(
+            @Param("userId") Long userId,
+            @Param("cursor") LocalDateTime cursor,
+            @Param("type") String type,   // "NOVEL" or "ESSAY"
+            @Param("limit") int limit     // size+1 전달
+    );
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("""
+    DELETE FROM ChapterJpaEntity c
+    WHERE c.authorId = :userId
+      AND c.seriesId IN (
+          SELECT s.id FROM SeriesJpaEntity s
+          WHERE s.type = :seriesType
+      )
+      AND c.id IN :targetIds
+""")
+    int deleteChaptersBySeriesType(Long userId, Type seriesType, Collection<Long> targetIds);
 }
+

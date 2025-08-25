@@ -8,7 +8,9 @@ import com.teamflow.forestory_be.story.chapter.domain.vo.ChapterStatus;
 import com.teamflow.forestory_be.story.chapter.infrastructure.persistence.entity.ChapterJpaEntity;
 import com.teamflow.forestory_be.story.chapter.infrastructure.persistence.repository.ChapterJpaRepository;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.response.NeighborChapter;
+import com.teamflow.forestory_be.story.series.domain.vo.Type;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.ChapterWithCreatedAt;
+import java.util.Collection;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -98,5 +100,11 @@ public class ChapterPersistenceAdaptor implements ChapterRepositoryPort {
     @Override
     public Long sumLikeCountBySeriesAndStatus(Long seriesId, ChapterStatus status) {
         return chapterJpaRepository.sumLikeCountBySeriesAndStatus(seriesId, status);
+    }
+
+    @Override
+    @Transactional
+    public int deleteChaptersBySeriesType(Long userId, Type seriesType, Collection<Long> targetIds) {
+        return chapterJpaRepository.deleteChaptersBySeriesType(userId, seriesType, targetIds);
     }
 }
