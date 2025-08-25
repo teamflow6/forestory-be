@@ -3,7 +3,9 @@ package com.teamflow.forestory_be.story.chapter.domain.repository;
 import com.teamflow.forestory_be.story.chapter.domain.entity.Chapter;
 import com.teamflow.forestory_be.story.chapter.domain.vo.ChapterStatus;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.response.NeighborChapter;
+import com.teamflow.forestory_be.story.series.domain.vo.Type;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.ChapterWithCreatedAt;
+import java.util.Collection;
 import java.util.List;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -33,5 +35,7 @@ public interface ChapterRepositoryPort {
     void decreaseLikeCount(Long articleId);
 
     Long sumLikeCountBySeriesAndStatus(Long seriesId, ChapterStatus status); // PUBLISHED만
+
+    int deleteChaptersBySeriesType(Long userId, Type seriesType, Collection<Long> targetIds);
 }
 

@@ -1,6 +1,7 @@
 package com.teamflow.forestory_be.article.domain.repository;
 
 import com.teamflow.forestory_be.article.domain.entity.Article;
+import java.util.Collection;
 import java.util.List;
 
 public interface ArticleRepositoryPort {
@@ -16,4 +17,6 @@ public interface ArticleRepositoryPort {
     void increaseLikeCount(Long articleId);
 
     void decreaseLikeCount(Long articleId);
+
+    int deleteArticles(Long userId, Collection<Long> targetIds);
 }
