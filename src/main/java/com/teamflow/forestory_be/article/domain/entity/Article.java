@@ -18,33 +18,40 @@ public class Article {
     private final Subtitle subtitle;
     private final Content content;
     private final String thumbnailUrl;
+    private final long likeCount;
     private final ArticleStatus status;
 
-    private Article(Long id, Long authorId, Title title, Subtitle subtitle,
-                    Content content, String thumbnailUrl, ArticleStatus status) {
+    private Article(Long id,
+                    Long authorId,
+                    Title title,
+                    Subtitle subtitle,
+                    Content content,
+                    String thumbnailUrl,
+                    long likeCount,
+                    ArticleStatus status) {
         this.id = Objects.requireNonNull(id);
         this.authorId = Objects.requireNonNull(authorId);
         this.title = Objects.requireNonNull(title);
         this.subtitle = Objects.requireNonNull(subtitle);
         this.content = Objects.requireNonNull(content);
         this.thumbnailUrl = thumbnailUrl;
+        this.likeCount = likeCount;
         this.status = Objects.requireNonNull(status);
     }
 
     public static Article create(Long authorId, Title title, Subtitle subtitle, Content content, String thumbnailUrl) {
         Long id = TsidGenerator.generate();
-        return new Article(id, authorId, title, subtitle, content, thumbnailUrl, ArticleStatus.PUBLISHED);
+        return new Article(id, authorId, title, subtitle, content, thumbnailUrl, 0, ArticleStatus.PUBLISHED);
     }
 
     public static Article draft(Long authorId, Title title, Subtitle subtitle, Content content, String thumbnailUrl) {
         Long id = TsidGenerator.generate();
-        return new Article(id, authorId, title, subtitle, content, thumbnailUrl, ArticleStatus.DRAFT);
+        return new Article(id, authorId, title, subtitle, content, thumbnailUrl, 0, ArticleStatus.DRAFT);
     }
 
-
     public static Article reconstruct(Long id, Long authorId, Title title, Subtitle subtitle, Content content,
-                                      String thumbnailUrl, ArticleStatus status) {
-        return new Article(id, authorId, title, subtitle, content, thumbnailUrl, status);
+                                      String thumbnailUrl, long likeCount, ArticleStatus status) {
+        return new Article(id, authorId, title, subtitle, content, thumbnailUrl, likeCount, status);
     }
 
     public Article update(Title title, Subtitle subtitle, Content content, String thumbnailUrl, ArticleStatus status) {
@@ -55,6 +62,7 @@ public class Article {
                 subtitle,
                 content,
                 thumbnailUrl,
+                this.likeCount,
                 status
         );
     }
@@ -70,10 +78,10 @@ public class Article {
                 this.subtitle,
                 this.content,
                 this.thumbnailUrl,
+                this.likeCount,
                 newStatus
         );
     }
-
 
     public void validateOwnerOrThrow(Long userId) {
         if (!authorId.equals(userId)) {

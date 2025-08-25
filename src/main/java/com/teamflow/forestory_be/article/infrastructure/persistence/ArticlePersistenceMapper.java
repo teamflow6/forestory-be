@@ -20,6 +20,7 @@ public class ArticlePersistenceMapper {
                 new Subtitle(articleJpaEntity.getSubtitle()),
                 new Content(articleJpaEntity.getContent()),
                 articleJpaEntity.getThumbnailUrl(),
+                articleJpaEntity.getLikeCount(),
                 articleJpaEntity.getStatus()
         );
     }
@@ -32,6 +33,7 @@ public class ArticlePersistenceMapper {
                 .subtitle(article.getSubtitle().value())
                 .content(article.getContent().value())
                 .thumbnailUrl(article.getThumbnailUrl())
+                .likeCount(article.getLikeCount())
                 .status(article.getStatus())
                 .build();
     }
