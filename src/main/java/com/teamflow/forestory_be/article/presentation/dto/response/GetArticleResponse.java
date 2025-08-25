@@ -10,6 +10,7 @@ public record GetArticleResponse(
         String subtitle,
         String content,
         String thumbnailUrl,
+        long likeCount,
         ArticleAuthorResponse author
 
 ) {
@@ -20,6 +21,7 @@ public record GetArticleResponse(
                 article.getSubtitle().value(),
                 article.getContent().value(),
                 article.getThumbnailUrl(),
+                article.getLikeCount(),
                 ArticleAuthorResponse.from(author)
         );
     }

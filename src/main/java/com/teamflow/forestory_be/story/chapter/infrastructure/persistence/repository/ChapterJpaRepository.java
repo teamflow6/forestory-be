@@ -1,5 +1,6 @@
 package com.teamflow.forestory_be.story.chapter.infrastructure.persistence.repository;
 
+import com.teamflow.forestory_be.story.chapter.domain.vo.ChapterStatus;
 import com.teamflow.forestory_be.story.chapter.infrastructure.persistence.entity.ChapterJpaEntity;
 import java.util.List;
 import java.util.Optional;
@@ -25,8 +26,7 @@ public interface ChapterJpaRepository extends JpaRepository<ChapterJpaEntity, Lo
 
     void deleteBySeriesId(Long seriesId);
 
-    @Query("SELECT c FROM ChapterJpaEntity c WHERE c.seriesId = :seriesId ORDER BY c.chapterNumber DESC")
-    ChapterJpaEntity findTopBySeriesIdOrderByChapterNumberDesc(Long seriesId);
+    ChapterJpaEntity findTopBySeriesIdOrderByChapterNumberDescIdDesc(Long seriesId);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("""
@@ -43,4 +43,13 @@ public interface ChapterJpaRepository extends JpaRepository<ChapterJpaEntity, Lo
             where c.id = :id
            """)
     int decreaseLikeCount(@Param("id") Long id);
+
+    @Query("""
+    select coalesce(sum(c.likeCount), 0)
+    from ChapterJpaEntity c
+    where c.seriesId = :seriesId
+      and c.status = :status
+    """)
+    Long sumLikeCountBySeriesAndStatus(@Param("seriesId") Long seriesId,
+                                       @Param("status") ChapterStatus status);
 }

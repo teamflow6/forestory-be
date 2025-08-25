@@ -9,7 +9,7 @@ public record CreateChapterCommand(
         String chapterTitle,
         String chapterSubtitle,
         String chapterBody,
-        String thumnnailUrl,
+        String thumbnailUrl,
         ChapterStatus chapterStatus
 ) {
 }

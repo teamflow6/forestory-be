@@ -13,12 +13,14 @@ public record GetSeriesResponse(
         String status,
         int totalPublishedChapters,
         List<ChapterResponse> chapter,
-        AuthorResponse author
+        AuthorResponse author,
+        long seriesLikeCount
 ) {
     public static GetSeriesResponse of(
             Series series,
             List<ChapterResponse> publishedChapterResponses,
-            User author
+            User author,
+            long seriesLikeCount
     ) {
         return new GetSeriesResponse(
                 String.valueOf(series.getId()),
@@ -28,7 +30,8 @@ public record GetSeriesResponse(
                 series.getSeriesStatus().name(),
                 publishedChapterResponses.size(),
                 publishedChapterResponses,
-                AuthorResponse.from(author)
+                AuthorResponse.from(author),
+                seriesLikeCount
         );
     }
 

@@ -10,6 +10,7 @@ public record UpdateChapterCommand(
         String title,
         String subtitle,
         String body,
+        String thumbnailUrl,
         ChapterStatus status,
         int chapterNumber
 ) {

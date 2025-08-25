@@ -1,6 +1,7 @@
 package com.teamflow.forestory_be.story.chapter.domain.repository;
 
 import com.teamflow.forestory_be.story.chapter.domain.entity.Chapter;
+import com.teamflow.forestory_be.story.chapter.domain.vo.ChapterStatus;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.response.NeighborChapter;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.ChapterWithCreatedAt;
 import java.util.List;
@@ -30,4 +31,7 @@ public interface ChapterRepositoryPort {
     void increaseLikeCount(Long articleId);
 
     void decreaseLikeCount(Long articleId);
+
+    Long sumLikeCountBySeriesAndStatus(Long seriesId, ChapterStatus status); // PUBLISHED만
 }
+

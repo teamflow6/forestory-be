@@ -4,9 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
-import java.util.List;
 
 @Schema(description = "챕터 수정 요청 DTO")
 public record UpdateChapterRequest(
@@ -42,6 +39,13 @@ public record UpdateChapterRequest(
         )
         @NotBlank(message = "본문은 필수입니다.")
         String body,
+
+        @Schema(
+                description = "수정할 썸네일 URL",
+                example = "https://cdn.example.com/thumbs/ch-3.png",
+                requiredMode = Schema.RequiredMode.NOT_REQUIRED
+        )
+        String thumbnailUrl,
 
         @Schema(
                 description = "게시 상태 (DRAFT 또는 PUBLISHED)",

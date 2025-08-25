@@ -4,6 +4,7 @@ import com.teamflow.forestory_be.article.domain.exception.ArticleNotFoundExcepti
 import com.teamflow.forestory_be.article.infrastructure.persistence.repository.ArticleJpaRepository;
 import com.teamflow.forestory_be.story.chapter.domain.entity.Chapter;
 import com.teamflow.forestory_be.story.chapter.domain.repository.ChapterRepositoryPort;
+import com.teamflow.forestory_be.story.chapter.domain.vo.ChapterStatus;
 import com.teamflow.forestory_be.story.chapter.infrastructure.persistence.entity.ChapterJpaEntity;
 import com.teamflow.forestory_be.story.chapter.infrastructure.persistence.repository.ChapterJpaRepository;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.response.NeighborChapter;
@@ -18,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChapterPersistenceAdaptor implements ChapterRepositoryPort {
 
     private final ChapterJpaRepository chapterJpaRepository;
-    private final ArticleJpaRepository articleJpaRepository;
 
     @Override
     public void save(Chapter chapter) {
@@ -65,7 +65,7 @@ public class ChapterPersistenceAdaptor implements ChapterRepositoryPort {
 
     @Override
     public Chapter findTopBySeriesIdOrderByChapterNumberDesc(Long seriesId) {
-        ChapterJpaEntity entity = chapterJpaRepository.findTopBySeriesIdOrderByChapterNumberDesc(seriesId);
+        ChapterJpaEntity entity = chapterJpaRepository.findTopBySeriesIdOrderByChapterNumberDescIdDesc(seriesId);
         if (entity == null) {
             throw new IllegalArgumentException("No chapter found for seriesId: " + seriesId);
         }
@@ -93,5 +93,10 @@ public class ChapterPersistenceAdaptor implements ChapterRepositoryPort {
         if (updated == 0) {
             throw new IllegalArgumentException("Chapter not found with id: " + chapterId);
         }
+    }
+
+    @Override
+    public Long sumLikeCountBySeriesAndStatus(Long seriesId, ChapterStatus status) {
+        return chapterJpaRepository.sumLikeCountBySeriesAndStatus(seriesId, status);
     }
 }

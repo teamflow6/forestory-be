@@ -19,15 +19,14 @@ public class Chapter {
     private final ChapterSubtitle subtitle;
     private final ChapterBody body;
     private final String thumbnailUrl;
+    private final long likeCount;
     private final ChapterStatus status;
     private final int chapterNumber;
-    // 발행 시점 (PUBLISHED일 때만 값 존재)
     private final LocalDate publishedAt;
 
     private Chapter(Long id, Long seriesId, Long authorId,
                     ChapterTitle title, ChapterSubtitle subtitle, ChapterBody body, String thumbnailUrl,
-                     ChapterStatus status,
-                    int chapterNumber, LocalDate publishedAt) {
+                    long likeCount, ChapterStatus status, int chapterNumber, LocalDate publishedAt) {
         this.id = Objects.requireNonNull(id);
         this.seriesId = Objects.requireNonNull(seriesId);
         this.authorId = Objects.requireNonNull(authorId);
@@ -35,54 +34,46 @@ public class Chapter {
         this.subtitle = Objects.requireNonNull(subtitle);
         this.body = Objects.requireNonNull(body);
         this.thumbnailUrl = thumbnailUrl;
+        this.likeCount = likeCount;
         this.status = Objects.requireNonNull(status);
         this.chapterNumber = chapterNumber;
-        // DRAFT이면 null, PUBLISHED면 값
         this.publishedAt = (status == ChapterStatus.PUBLISHED)
                 ? (publishedAt != null ? publishedAt : LocalDate.now())
                 : null;
     }
 
-    /** DB 재구성용 */
     public static Chapter reconstruct(Long id, Long seriesId, Long authorId,
                                       ChapterTitle title, ChapterSubtitle subtitle,
-                                      ChapterBody body,String thumbnailUrl,
-                                      ChapterStatus status, int chapterNumber,
-                                      LocalDate publishedAt) {
-        return new Chapter(id, seriesId, authorId, title, subtitle, body, thumbnailUrl, status, chapterNumber, publishedAt);
+                                      ChapterBody body, String thumbnailUrl,
+                                      long likeCount, ChapterStatus status,
+                                      int chapterNumber, LocalDate publishedAt) {
+        return new Chapter(id, seriesId, authorId, title, subtitle, body, thumbnailUrl,
+                likeCount, status, chapterNumber, publishedAt);
     }
 
-    /** 발행 생성 */
     public static Chapter createPublished(Long seriesId, Long authorId,
                                           ChapterTitle title, ChapterSubtitle subtitle,
-                                          ChapterBody body,String thumbnailUrl,
+                                          ChapterBody body, String thumbnailUrl,
                                           int chapterNumber) {
         Long id = TsidGenerator.generate();
-        return new Chapter(id, seriesId, authorId, title, subtitle, body,thumbnailUrl,
-                ChapterStatus.PUBLISHED, chapterNumber, LocalDate.now());
+        return new Chapter(id, seriesId, authorId, title, subtitle, body, thumbnailUrl,
+                0L, ChapterStatus.PUBLISHED, chapterNumber, LocalDate.now());
     }
 
-    /** 초안 생성 */
     public static Chapter createDraft(Long seriesId, Long authorId,
                                       ChapterTitle title, ChapterSubtitle subtitle,
-                                      ChapterBody body,String thumbnailUrl,
+                                      ChapterBody body, String thumbnailUrl,
                                       int chapterNumber) {
         Long id = TsidGenerator.generate();
         return new Chapter(id, seriesId, authorId, title, subtitle, body, thumbnailUrl,
-                ChapterStatus.DRAFT, chapterNumber, null);
+                0L, ChapterStatus.DRAFT, chapterNumber, null);
     }
 
-    /** 수정: 상태에 따라 publishedAt 유지/세팅 */
     public Chapter update(ChapterTitle title, ChapterSubtitle subtitle, ChapterBody body,
-                          ChapterStatus status, int chapterNumber) {
-        LocalDate nextPublishedAt;
-        if (status == ChapterStatus.PUBLISHED) {
-            // 이미 발행돼 있었다면 기존 발행일 유지, 처음 발행이면 오늘로
-            nextPublishedAt = (this.publishedAt != null) ? this.publishedAt : LocalDate.now();
-        } else {
-            // DRAFT로 바꾸면 발행일 제거 (정책에 따라 유지하고 싶다면 this.publishedAt로 변경)
-            nextPublishedAt = null;
-        }
+                          String thumbnailUrl, ChapterStatus status, int chapterNumber) {
+        LocalDate nextPublishedAt = (status == ChapterStatus.PUBLISHED)
+                ? (this.publishedAt != null ? this.publishedAt : LocalDate.now())
+                : null;
 
         return new Chapter(
                 this.id,
@@ -92,6 +83,7 @@ public class Chapter {
                 subtitle,
                 body,
                 thumbnailUrl,
+                this.likeCount,
                 status,
                 chapterNumber,
                 nextPublishedAt
