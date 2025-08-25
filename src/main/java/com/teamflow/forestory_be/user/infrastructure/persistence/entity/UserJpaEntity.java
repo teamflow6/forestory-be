@@ -37,4 +37,7 @@ public class UserJpaEntity extends BaseTimeEntity {
 
     @Column(name = "introduction")
     private String introduction;
+
+    @Column(name = "contact_url")
+    private String contactUrl;
 }
