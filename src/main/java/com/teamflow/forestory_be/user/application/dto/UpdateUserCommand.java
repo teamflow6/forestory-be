@@ -4,6 +4,7 @@ public record UpdateUserCommand(
     Long userId,
     String name,
     String introduction,
-    String profileImageUrl
+    String profileImageUrl,
+    String contactUrl
 ) {
 }
