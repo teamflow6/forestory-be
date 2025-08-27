@@ -86,5 +86,8 @@ public interface ChapterJpaRepository extends JpaRepository<ChapterJpaEntity, Lo
       AND c.id IN :targetIds
 """)
     int deleteChaptersBySeriesType(Long userId, Type seriesType, Collection<Long> targetIds);
+
+    @Query("SELECT c FROM ChapterJpaEntity c WHERE c.id IN :ids")
+    List<ChapterJpaEntity> findAllByIdIn(@Param("ids") List<Long> ids);
 }
 

@@ -7,6 +7,7 @@ import com.teamflow.forestory_be.story.series.domain.vo.Type;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.ChapterWithCreatedAt;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -37,5 +38,7 @@ public interface ChapterRepositoryPort {
     Long sumLikeCountBySeriesAndStatus(Long seriesId, ChapterStatus status); // PUBLISHED만
 
     int deleteChaptersBySeriesType(Long userId, Type seriesType, Collection<Long> targetIds);
+
+    Map<Long, Chapter> findByIdsAsMap(List<Long> ids);
 }
 
