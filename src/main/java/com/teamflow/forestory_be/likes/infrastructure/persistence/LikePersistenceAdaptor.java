@@ -6,8 +6,12 @@ import com.teamflow.forestory_be.likes.domain.vo.LikeStatus;
 import com.teamflow.forestory_be.likes.domain.vo.TargetType;
 import com.teamflow.forestory_be.likes.infrastructure.persistence.entity.LikeJpaEntity;
 import com.teamflow.forestory_be.likes.infrastructure.persistence.repository.LikeJpaRepository;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,5 +32,28 @@ public class LikePersistenceAdaptor implements LikeRepositoryPort {
         return likeJpaRepository
                 .findByUserIdAndTargetTypeAndTargetId(userId, targetType, targetId)
                 .map(LikePersistenceMapper::toDomainEntity);
+    }
+
+    @Override
+    public List<Likes> sliceByUserUpdatedDesc(
+            Long userId,
+            LocalDateTime cursorUpdatedAt,
+            Long cursorLikeId,
+            int limitPlusOne
+    ) {
+        PageRequest page = PageRequest.of(0, limitPlusOne);
+
+        List<LikeJpaEntity> rows = (cursorUpdatedAt == null || cursorLikeId == null)
+                ? likeJpaRepository.firstPage(userId, page)
+                : likeJpaRepository.nextPage(userId, cursorUpdatedAt, cursorLikeId, page);
+
+        return rows.stream()
+                .map(LikePersistenceMapper::toDomainEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteAllByUserIdAndTargetIdsAndTargetType(Long userId, List<Long> targetIds, TargetType targetType) {
+        likeJpaRepository.deleteAllByUserIdAndTargetIdsAndTargetType(userId, targetIds, targetType);
     }
 }

@@ -12,7 +12,8 @@ public final class LikePersistenceMapper {
                 e.getUserId(),
                 e.getTargetType(),
                 e.getTargetId(),
-                e.getStatus()
+                e.getStatus(),
+                e.getUpdatedAt()
         );
     }
 
