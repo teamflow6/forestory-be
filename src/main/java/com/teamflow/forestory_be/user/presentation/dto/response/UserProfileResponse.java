@@ -6,7 +6,7 @@ public record UserProfileResponse(
     Long userId,
     String name,
     String introduction,
-    String profileImageUrl,
+    String profileUrl,
     String contactUrl
 ) {
 
