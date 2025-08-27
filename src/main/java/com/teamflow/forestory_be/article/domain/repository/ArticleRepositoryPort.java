@@ -3,6 +3,7 @@ package com.teamflow.forestory_be.article.domain.repository;
 import com.teamflow.forestory_be.article.domain.entity.Article;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public interface ArticleRepositoryPort {
 
@@ -19,4 +20,6 @@ public interface ArticleRepositoryPort {
     void decreaseLikeCount(Long articleId);
 
     int deleteArticles(Long userId, Collection<Long> targetIds);
+
+    Map<Long, Article> findByIdsAsMap(List<Long> ids);
 }
