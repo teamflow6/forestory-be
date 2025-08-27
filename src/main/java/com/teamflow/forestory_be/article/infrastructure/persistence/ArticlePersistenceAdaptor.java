@@ -7,6 +7,8 @@ import com.teamflow.forestory_be.article.infrastructure.persistence.entity.Artic
 import com.teamflow.forestory_be.article.infrastructure.persistence.repository.ArticleJpaRepository;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,5 +68,16 @@ public class ArticlePersistenceAdaptor implements ArticleRepositoryPort {
     public int deleteArticles(Long userId, Collection<Long> targetIds) {
         if (targetIds == null || targetIds.isEmpty()) return 0;
         return articleJpaRepository.deleteArticles(userId, targetIds);
+    }
+
+
+    @Override
+    public Map<Long, Article> findByIdsAsMap(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) return Map.of();
+        return articleJpaRepository.findAllByIdIn(ids).stream()
+                .collect(Collectors.toMap(
+                        ArticleJpaEntity::getId,
+                        ArticlePersistenceMapper::toDomainEntity
+                ));
     }
 }

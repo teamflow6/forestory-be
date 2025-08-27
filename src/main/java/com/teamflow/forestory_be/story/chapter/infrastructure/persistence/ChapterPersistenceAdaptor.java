@@ -12,6 +12,8 @@ import com.teamflow.forestory_be.story.series.domain.vo.Type;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.ChapterWithCreatedAt;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -106,5 +108,16 @@ public class ChapterPersistenceAdaptor implements ChapterRepositoryPort {
     @Transactional
     public int deleteChaptersBySeriesType(Long userId, Type seriesType, Collection<Long> targetIds) {
         return chapterJpaRepository.deleteChaptersBySeriesType(userId, seriesType, targetIds);
+    }
+
+    @Override
+    public Map<Long, Chapter> findByIdsAsMap(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) return Map.of();
+
+        return chapterJpaRepository.findAllByIdIn(ids).stream()
+                .collect(Collectors.toMap(
+                        ChapterJpaEntity::getId,
+                        ChapterPersistenceMapper::toDomainEntity
+                ));
     }
 }

@@ -59,4 +59,7 @@ public interface ArticleJpaRepository extends JpaRepository<ArticleJpaEntity, Lo
     """)
     int deleteArticles(Long userId, Collection<Long> targetIds);
 
+
+    @Query("SELECT a FROM ArticleJpaEntity a WHERE a.id IN :ids")
+    List<ArticleJpaEntity> findAllByIdIn(@Param("ids") List<Long> ids);
 }
