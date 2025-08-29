@@ -62,4 +62,106 @@ public interface ArticleJpaRepository extends JpaRepository<ArticleJpaEntity, Lo
 
     @Query("SELECT a FROM ArticleJpaEntity a WHERE a.id IN :ids")
     List<ArticleJpaEntity> findAllByIdIn(@Param("ids") List<Long> ids);
+
+    @Query("""
+        SELECT a.id, a.title, a.thumbnailUrl, COUNT(l.id)
+        FROM ArticleJpaEntity a
+        LEFT JOIN LikeJpaEntity l
+               ON l.targetId = a.id
+              AND l.targetType = 'ARTICLE'
+              AND l.createdAt >= :since
+              AND l.createdAt <  :until
+        GROUP BY a.id, a.title, a.thumbnailUrl
+        ORDER BY COUNT(l.id) DESC, a.id DESC
+    """)
+    List<Object[]> topByWeeklyLikes(@Param("since") LocalDateTime since,
+                                    @Param("until") LocalDateTime until,
+                                    Pageable pageable);
+
+    // 인기(첫 페이지)
+    @Query("""
+        SELECT a.id, a.title, a.thumbnailUrl, COUNT(l.id) AS wl
+        FROM ArticleJpaEntity a
+        LEFT JOIN LikeJpaEntity l
+               ON l.targetId = a.id
+              AND l.targetType = 'ARTICLE'
+              AND l.createdAt >= :since
+              AND l.createdAt <  :until
+        GROUP BY a.id, a.title, a.thumbnailUrl
+        ORDER BY wl DESC, a.id DESC
+    """)
+    List<Object[]> weeklyPopularFirst(@Param("since") LocalDateTime since,
+                                      @Param("until") LocalDateTime until,
+                                      Pageable pageable);
+
+    // 인기(커서 이후)
+    @Query("""
+        SELECT a.id, a.title, a.thumbnailUrl, COUNT(l.id) AS wl
+        FROM ArticleJpaEntity a
+        LEFT JOIN LikeJpaEntity l
+               ON l.targetId = a.id
+              AND l.targetType = 'ARTICLE'
+              AND l.createdAt >= :since
+              AND l.createdAt <  :until
+        GROUP BY a.id, a.title, a.thumbnailUrl
+        HAVING (
+            COUNT(l.id) < (
+                SELECT COUNT(l2.id) FROM LikeJpaEntity l2
+                WHERE l2.targetType = 'ARTICLE'
+                  AND l2.targetId   = :cursorId
+                  AND l2.createdAt >= :since
+                  AND l2.createdAt <  :until
+            )
+            OR (
+                COUNT(l.id) = (
+                    SELECT COUNT(l2.id) FROM LikeJpaEntity l2
+                    WHERE l2.targetType = 'ARTICLE'
+                      AND l2.targetId   = :cursorId
+                      AND l2.createdAt >= :since
+                      AND l2.createdAt <  :until
+                )
+                AND a.id < :cursorId
+            )
+        )
+        ORDER BY wl DESC, a.id DESC
+    """)
+    List<Object[]> weeklyPopularAfter(@Param("since") LocalDateTime since,
+                                      @Param("until") LocalDateTime until,
+                                      @Param("cursorId") Long cursorId,
+                                      Pageable pageable);
+
+    // 최신(첫 페이지) — createdAt DESC, id DESC
+    @Query("""
+    SELECT a.id, a.title, a.thumbnailUrl,
+           SUM(CASE WHEN l.createdAt >= :since AND l.createdAt < :until THEN 1 ELSE 0 END) AS wl,
+           a.createdAt
+    FROM ArticleJpaEntity a
+    LEFT JOIN LikeJpaEntity l ON l.targetId = a.id AND l.targetType = 'ARTICLE'
+    GROUP BY a.id, a.title, a.thumbnailUrl, a.createdAt
+    ORDER BY a.createdAt DESC, a.id DESC
+""")
+    List<Object[]> latestFirst(@Param("since") LocalDateTime since,
+                               @Param("until") LocalDateTime until,
+                               Pageable pageable);
+
+    // 최신(커서 이후) — createdAt DESC, id DESC
+    @Query("""
+    SELECT a.id, a.title, a.thumbnailUrl,
+           SUM(CASE WHEN l.createdAt >= :since AND l.createdAt < :until THEN 1 ELSE 0 END) AS wl,
+           a.createdAt
+    FROM ArticleJpaEntity a
+    LEFT JOIN LikeJpaEntity l ON l.targetId = a.id AND l.targetType = 'ARTICLE'
+    WHERE
+         a.createdAt <  (SELECT a2.createdAt FROM ArticleJpaEntity a2 WHERE a2.id = :cursorId)
+      OR (a.createdAt = (SELECT a2.createdAt FROM ArticleJpaEntity a2 WHERE a2.id = :cursorId)
+          AND a.id < :cursorId)
+    GROUP BY a.id, a.title, a.thumbnailUrl, a.createdAt
+    ORDER BY a.createdAt DESC, a.id DESC
+""")
+    List<Object[]> latestAfter(@Param("since") LocalDateTime since,
+                               @Param("until") LocalDateTime until,
+                               @Param("cursorId") Long cursorId,
+                               Pageable pageable);
+
+
 }
