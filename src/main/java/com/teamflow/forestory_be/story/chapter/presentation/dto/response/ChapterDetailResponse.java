@@ -9,7 +9,7 @@ public record ChapterDetailResponse(
         String chapterTitle,
         String chapterSubtitle,
         String body,
-        Long seriesId,
+        String seriesId,
         String seriesTitle,
         long likeCount
 ) {
@@ -20,7 +20,7 @@ public record ChapterDetailResponse(
                 chapter.getTitle().value(),
                 chapter.getSubtitle().value(),
                 chapter.getBody().value(),
-                series.getId(),
+                series.getId().toString(),
                 series.getTitle().value(),
                 chapter.getLikeCount()
         );
