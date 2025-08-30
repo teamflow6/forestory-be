@@ -1,9 +1,7 @@
 package com.teamflow.forestory_be.story.chapter.presentation.controller;
 
-import com.google.api.gax.rpc.UnauthenticatedException;
-import com.teamflow.forestory_be.auth.domain.entity.AuthUser;
-import com.teamflow.forestory_be.auth.infrastructure.security.oauth.CustomOAuth2User;
 import com.teamflow.forestory_be.story.chapter.application.dto.command.CreateChapterCommand;
+import com.teamflow.forestory_be.story.chapter.application.dto.command.DeleteChapterCommand;
 import com.teamflow.forestory_be.story.chapter.application.dto.command.UpdateChapterCommand;
 import com.teamflow.forestory_be.story.chapter.application.dto.query.GetChapterQuery;
 import com.teamflow.forestory_be.story.chapter.application.service.ChapterService;
@@ -11,6 +9,7 @@ import com.teamflow.forestory_be.story.chapter.domain.vo.ChapterStatus;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.request.CreateChapterRequest;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.request.UpdateChapterRequest;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.response.CreateChapterResponse;
+import com.teamflow.forestory_be.story.chapter.presentation.dto.response.DeleteChapterResponse;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.response.GetChapterResponse;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.response.UpdateChapterResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,9 +19,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -91,6 +90,21 @@ public class ChapterController {
         );
 
         UpdateChapterResponse response = chapterService.updateChapter(command);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{chapterId}")
+    @Operation(summary = "챕터 삭제", security = @SecurityRequirement(name = "AccessToken"))
+    public ResponseEntity<DeleteChapterResponse> deleteChapter(
+            @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
+            @PathVariable Long chapterId
+    ) {
+        DeleteChapterCommand command = new DeleteChapterCommand(
+                chapterId,
+                userId);
+
+
+        DeleteChapterResponse response = chapterService.deleteChapter(command);
         return ResponseEntity.ok(response);
     }
 

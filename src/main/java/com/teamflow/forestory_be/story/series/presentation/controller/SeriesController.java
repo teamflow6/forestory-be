@@ -15,7 +15,7 @@ import com.teamflow.forestory_be.story.series.presentation.dto.request.CreateSer
 import com.teamflow.forestory_be.story.series.presentation.dto.request.UpdateSeriesRequest;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.CompleteSeriesResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.CreateSeriesResponse;
-import com.teamflow.forestory_be.story.series.presentation.dto.response.DeleteChapterResponse;
+import com.teamflow.forestory_be.story.series.presentation.dto.response.DeleteLatestChapterResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.DeleteSeriesResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.GetNextChapterInfoResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.GetSeriesListResponse;
@@ -153,12 +153,12 @@ public class SeriesController {
 
     @DeleteMapping("/{seriesId}/chapters/latest")
     @Operation(summary = "시리즈의 최신 챕터 삭제", security = @SecurityRequirement(name = "AccessToken"))
-    public ResponseEntity<DeleteChapterResponse> deleteLatestChapter(
+    public ResponseEntity<DeleteLatestChapterResponse> deleteLatestChapter(
             @AuthenticationPrincipal Long userId,
             @PathVariable @NotNull Long seriesId
     ) {
         DeleteLatestChapterCommand command = new DeleteLatestChapterCommand(seriesId, userId);
-        DeleteChapterResponse response = seriesService.deleteLatestChapter(command);
+        DeleteLatestChapterResponse response = seriesService.deleteLatestChapter(command);
         return ResponseEntity.ok(response);
     }
 

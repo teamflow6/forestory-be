@@ -2,13 +2,16 @@ package com.teamflow.forestory_be.story.chapter.application.service;
 
 import com.teamflow.forestory_be.article.domain.repository.ArticleRepositoryPort;
 import com.teamflow.forestory_be.story.chapter.application.dto.command.CreateChapterCommand;
+import com.teamflow.forestory_be.story.chapter.application.dto.command.DeleteChapterCommand;
 import com.teamflow.forestory_be.story.chapter.application.dto.command.UpdateChapterCommand;
 import com.teamflow.forestory_be.story.chapter.application.dto.query.GetChapterQuery;
 import com.teamflow.forestory_be.story.chapter.domain.entity.Chapter;
+import com.teamflow.forestory_be.story.chapter.domain.exception.InvalidChapterOwnerException;
 import com.teamflow.forestory_be.story.chapter.domain.repository.ChapterRepositoryPort;
 import com.teamflow.forestory_be.story.chapter.domain.vo.*;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.response.ChapterDetailResponse;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.response.CreateChapterResponse;
+import com.teamflow.forestory_be.story.chapter.presentation.dto.response.DeleteChapterResponse;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.response.GetChapterResponse;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.response.NeighborChapter;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.response.RandomAuthorContentResponse;
@@ -16,6 +19,7 @@ import com.teamflow.forestory_be.story.chapter.presentation.dto.response.UpdateC
 import com.teamflow.forestory_be.story.series.domain.entity.Series;
 import com.teamflow.forestory_be.story.series.domain.repository.SeriesRepositoryPort;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.response.AuthorResponse;
+import com.teamflow.forestory_be.story.series.presentation.dto.response.DeleteLatestChapterResponse;
 import com.teamflow.forestory_be.user.domain.entity.User;
 import com.teamflow.forestory_be.user.domain.repository.UserRepositoryPort;
 import java.util.ArrayList;
@@ -107,6 +111,22 @@ public class ChapterService {
                 updatedChapter.getSeriesId(),
                 updatedChapter.getChapterNumber()
         );
+    }
+
+    public DeleteChapterResponse deleteChapter(DeleteChapterCommand command) {
+        // 존재 여부 확인
+        Chapter chapter = chapterRepositoryPort.getById(command.chapterId());
+
+
+        // 권한 체크: 작성자가 아니면 삭제 불가
+        if (!chapter.getAuthorId().equals(command.userId())) {
+            throw new InvalidChapterOwnerException();
+        }
+
+        // 실제 삭제 처리
+        chapterRepositoryPort.delete(chapter);
+
+        return DeleteChapterResponse.of(command.chapterId());
     }
 
     private List<RandomAuthorContentResponse> pickRandomArticles(Long authorId, Long excludeArticleId, int want) {
