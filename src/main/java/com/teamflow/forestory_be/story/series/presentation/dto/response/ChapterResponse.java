@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public record ChapterResponse(
-        Long chapterId,
+        String chapterId,
         int chapterNumber,
         String title,
         String subtitle,
@@ -22,7 +22,7 @@ public record ChapterResponse(
         Chapter chapter = ChapterPersistenceMapper.toDomainEntity(chapterEntity);
 
         return new ChapterResponse(
-                chapter.getId(),
+                chapter.getId().toString(),
                 chapter.getChapterNumber(),
                 chapter.getTitle().value(),
                 chapter.getSubtitle().value(),
