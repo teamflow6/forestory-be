@@ -1,6 +1,5 @@
 package com.teamflow.forestory_be.story.series.application.service;
 
-import com.teamflow.forestory_be.article.domain.vo.Title;
 import com.teamflow.forestory_be.story.chapter.domain.entity.Chapter;
 import com.teamflow.forestory_be.story.chapter.domain.repository.ChapterRepositoryPort;
 import com.teamflow.forestory_be.story.chapter.domain.vo.ChapterStatus;
@@ -21,7 +20,7 @@ import com.teamflow.forestory_be.story.series.domain.vo.Type;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.ChapterResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.ChapterWithCreatedAt;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.CompleteSeriesResponse;
-import com.teamflow.forestory_be.story.series.presentation.dto.response.DeleteChapterResponse;
+import com.teamflow.forestory_be.story.series.presentation.dto.response.DeleteLatestChapterResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.DeleteSeriesResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.GetNextChapterInfoResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.GetSeriesListResponse;
@@ -153,7 +152,7 @@ public class SeriesService {
     }
 
     @Transactional
-    public DeleteChapterResponse deleteLatestChapter(DeleteLatestChapterCommand command) {
+    public DeleteLatestChapterResponse deleteLatestChapter(DeleteLatestChapterCommand command) {
         // 시리즈 가져오기
         Series series = seriesRepositoryPort.getById(command.seriesId());
         series.validateOwnerOrThrow(command.authorId());
@@ -166,7 +165,7 @@ public class SeriesService {
         // 삭제
         chapterRepositoryPort.delete(latestChapter);
 
-        return DeleteChapterResponse.of(latestChapter.getId().toString(), command.seriesId().toString());
+        return DeleteLatestChapterResponse.of(latestChapter.getId().toString(), command.seriesId().toString());
     }
 
 }
