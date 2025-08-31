@@ -33,6 +33,10 @@ public final class SecurityIgnorePath {
             // Article
             new AntPathRequestMatcher("/api/v1/articles/**"),
 
+            // Comment
+            new AntPathRequestMatcher("/api/v1/comments/post/**", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/api/v1/comments/*", HttpMethod.GET.name()),
+
             // Actuator
             new AntPathRequestMatcher("/actuator/**", HttpMethod.GET.name())
         );
