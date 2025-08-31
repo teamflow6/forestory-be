@@ -71,7 +71,7 @@ public class ChapterQueryRepositoryImpl implements ChapterQueryRepository {
         return queryFactory
                 .select(constructor(
                         NeighborChapter.class,
-                        chapterJpaEntity.id,
+                        chapterJpaEntity.id.stringValue(),
                         chapterJpaEntity.chapterNumber,
                         chapterJpaEntity.title
                 ))
