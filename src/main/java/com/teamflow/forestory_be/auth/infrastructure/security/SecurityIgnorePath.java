@@ -16,29 +16,32 @@ public final class SecurityIgnorePath {
 
     private static OrRequestMatcher initIgnorePaths() {
         List<RequestMatcher> matchers = List.of(
-            // etc
-            new AntPathRequestMatcher("/health", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/v3/api-docs/**", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/swagger-ui/**", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/swagger-ui.html", HttpMethod.GET.name()),
+                // etc
+                new AntPathRequestMatcher("/health", HttpMethod.GET.name()),
+                new AntPathRequestMatcher("/v3/api-docs/**", HttpMethod.GET.name()),
+                new AntPathRequestMatcher("/swagger-ui/**", HttpMethod.GET.name()),
+                new AntPathRequestMatcher("/swagger-ui.html", HttpMethod.GET.name()),
 
-            // User
-            new RegexRequestMatcher("/api/v1/users/\\d+$", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/api/v1/users/name/exists", HttpMethod.GET.name()),
+                // User
+                new RegexRequestMatcher("/api/v1/users/\\d+$", HttpMethod.GET.name()),
+                new AntPathRequestMatcher("/api/v1/users/name/exists", HttpMethod.GET.name()),
 
-            // Auth
-            new AntPathRequestMatcher("/api/v1/auth/reissue", HttpMethod.POST.name()),
-            new AntPathRequestMatcher("/api/v1/auth/firebase/login", HttpMethod.POST.name()),
+                // Auth
+                new AntPathRequestMatcher("/api/v1/auth/reissue", HttpMethod.POST.name()),
+                new AntPathRequestMatcher("/api/v1/auth/firebase/login", HttpMethod.POST.name()),
 
-            // Article
-            new AntPathRequestMatcher("/api/v1/articles/**"),
+                // Article
+                new AntPathRequestMatcher("/api/v1/articles/**"),
 
-            // Actuator
-            new AntPathRequestMatcher("/actuator/**", HttpMethod.GET.name()),
+                // Home
+                new AntPathRequestMatcher("/api/v1/home/**", HttpMethod.GET.name()),
 
-            // Comment
-            new AntPathRequestMatcher("/api/v1/comments/post/**", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/api/v1/comments/*", HttpMethod.GET.name())
+                // Actuator
+                new AntPathRequestMatcher("/actuator/**", HttpMethod.GET.name()),
+          
+                // Comment
+                new AntPathRequestMatcher("/api/v1/comments/post/**", HttpMethod.GET.name()),
+                new AntPathRequestMatcher("/api/v1/comments/*", HttpMethod.GET.name())
         );
         return new OrRequestMatcher(matchers);
     }
