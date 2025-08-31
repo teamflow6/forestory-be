@@ -6,6 +6,7 @@ import com.teamflow.forestory_be.user.domain.repository.UserRepositoryPort;
 import com.teamflow.forestory_be.user.domain.vo.Name;
 import com.teamflow.forestory_be.user.infrastructure.persistence.entity.UserJpaEntity;
 import com.teamflow.forestory_be.user.infrastructure.persistence.repository.UserJpaRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -31,5 +32,12 @@ public class UserPersistenceAdapter implements UserRepositoryPort {
     @Override
     public Boolean existsByName(Name name) {
         return userJpaRepository.existsByName(name.value());
+    }
+
+    @Override
+    public List<User> findAllByIds(List<Long> userIds) {
+        return userJpaRepository.findAllByIdIn(userIds).stream()
+            .map(UserPersistenceMapper::toDomainEntity)
+            .toList();
     }
 }

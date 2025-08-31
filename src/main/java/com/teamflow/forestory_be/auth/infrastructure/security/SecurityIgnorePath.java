@@ -37,7 +37,11 @@ public final class SecurityIgnorePath {
                 new AntPathRequestMatcher("/api/v1/home/**", HttpMethod.GET.name()),
 
                 // Actuator
-                new AntPathRequestMatcher("/actuator/**", HttpMethod.GET.name())
+                new AntPathRequestMatcher("/actuator/**", HttpMethod.GET.name()),
+          
+                // Comment
+                new AntPathRequestMatcher("/api/v1/comments/post/**", HttpMethod.GET.name()),
+                new AntPathRequestMatcher("/api/v1/comments/*", HttpMethod.GET.name())
         );
         return new OrRequestMatcher(matchers);
     }
