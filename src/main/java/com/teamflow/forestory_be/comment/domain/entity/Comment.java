@@ -196,18 +196,4 @@ public class Comment {
             throw new InvalidCommentStatusException();
         }
     }
-
-    @Override
-    public String toString() {
-        return "Comment{" +
-            "id=" + id +
-            ", userId=" + userId +
-            ", postId=" + postId +
-            ", parentCommentId=" + parentCommentId +
-            ", commentContent=" + commentContent +
-            ", replyCount=" + replyCount +
-            ", status=" + status +
-            ", createdAt=" + createdAt +
-            '}';
-    }
 }
