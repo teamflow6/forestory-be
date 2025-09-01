@@ -22,6 +22,8 @@ public interface SeriesRepositoryPort {
     List<GetSeriesListResponse> findByAuthorAndTypeAndStatus(Long authorId, Type type, SeriesStatus status, LocalDateTime lastCreatedAt, int size);
 
 
+    void publishIfPending(Long seriesId);
+
     List<Object[]> findTopByWeeklyLikesRaw(Type type, int limit, LocalDateTime since, LocalDateTime until);
     List<Object[]> findWeeklyPopularAfterCursorById(Type type, int size, LocalDateTime since, LocalDateTime until, Long cursorId);
     List<Object[]> findLatestAfterCursorById(Type type, int size, LocalDateTime since, LocalDateTime until, Long cursorId);

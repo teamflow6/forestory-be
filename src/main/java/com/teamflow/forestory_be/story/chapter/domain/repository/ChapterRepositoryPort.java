@@ -17,7 +17,7 @@ public interface ChapterRepositoryPort {
 
     Integer findLastChapterNumber(Long seriesId);
 
-    List<ChapterWithCreatedAt> findPublishedChaptersWithScroll(Long seriesId, String sort, int lastChapterNumber, int size);
+    List<ChapterWithCreatedAt> findPublishedChaptersWithScroll(Long seriesId, String sort, Integer lastChapterNumber, int size);
 
     Chapter getById(Long id);
 

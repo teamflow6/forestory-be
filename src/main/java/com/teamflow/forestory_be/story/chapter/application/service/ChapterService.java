@@ -19,6 +19,7 @@ import com.teamflow.forestory_be.story.chapter.presentation.dto.response.UpdateC
 import com.teamflow.forestory_be.story.series.domain.entity.Series;
 import com.teamflow.forestory_be.story.series.domain.repository.SeriesRepositoryPort;
 import com.teamflow.forestory_be.story.chapter.presentation.dto.response.AuthorResponse;
+import com.teamflow.forestory_be.story.series.domain.vo.SeriesStatus;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.DeleteLatestChapterResponse;
 import com.teamflow.forestory_be.user.domain.entity.User;
 import com.teamflow.forestory_be.user.domain.repository.UserRepositoryPort;
@@ -61,6 +62,9 @@ public class ChapterService {
         }
 
         chapterRepositoryPort.save(chapter);
+        if (lastNumber == null) {
+            seriesRepositoryPort.publishIfPending(command.seriesId());
+        }
         return CreateChapterResponse.of(chapter.getId(), chapter.getSeriesId(), chapter.getChapterNumber());
     }
 

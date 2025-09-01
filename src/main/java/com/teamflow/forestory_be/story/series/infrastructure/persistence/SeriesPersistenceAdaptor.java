@@ -98,6 +98,13 @@ public class SeriesPersistenceAdaptor implements SeriesRepositoryPort {
                 .toList();
     }
 
+    @Transactional
+    public void publishIfPending(Long seriesId) {
+        SeriesJpaEntity e = seriesJpaRepository.findById(seriesId)
+                .orElseThrow(SeriesNotFoundException::new);
+        e.publishIfPending();                   // PENDING일 때만 PUBLISHED로
+    }
+
 
 
     /* ========= 추가: 홈 섹션 & 탭 목록용 ========= */
