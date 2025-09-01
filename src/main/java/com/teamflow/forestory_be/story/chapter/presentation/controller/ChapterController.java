@@ -81,9 +81,9 @@ public class ChapterController {
                 chapterId,
                 request.seriesId(),
                 userId,
-                request.title(),
-                request.subtitle(),
-                request.body(),
+                request.chapterTitle(),
+                request.chapterSubtitle(),
+                request.chapterBody(),
                 request.thumbnailUrl(),
                 ChapterStatus.from(request.status()),
                 request.chapterNumber()
