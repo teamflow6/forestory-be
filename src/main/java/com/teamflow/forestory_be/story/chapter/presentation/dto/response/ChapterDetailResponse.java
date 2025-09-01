@@ -8,7 +8,7 @@ public record ChapterDetailResponse(
         int chapterNumber,
         String chapterTitle,
         String chapterSubtitle,
-        String body,
+        String chapterBody,
         String seriesId,
         String seriesTitle,
         long likeCount

@@ -26,8 +26,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -95,14 +97,19 @@ public class SeriesController {
     )
     public ResponseEntity<List<GetSeriesListResponse>> getSeriesList(
             @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
-            @Parameter(description = "마지막으로 본 챕터 번호(무한스크롤 기준점)") @RequestParam(required = false) Integer lastChapterNumber,
-            @Parameter(description = "가져올 개수") @RequestParam(defaultValue = "5") int size,
-            @Parameter(description = "시리즈 타입(all/NOVEL/ESSAY)") @RequestParam String type
+            @Parameter(description = "마지막으로 본 시리즈 생성일(무한스크롤 기준점, ISO-8601 형식)")
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            LocalDateTime lastCreatedAt,
+            @Parameter(description = "가져올 개수")
+            @RequestParam(defaultValue = "5") int size,
+            @Parameter(description = "시리즈 타입(all/NOVEL/ESSAY)")
+            @RequestParam String type
     ) {
-        GetSeriesListQuery query = new GetSeriesListQuery(userId, lastChapterNumber, size, type);
+        GetSeriesListQuery query = new GetSeriesListQuery(userId, lastCreatedAt, size, type);
         List<GetSeriesListResponse> responses = seriesService.getSeriesList(query);
         return ResponseEntity.ok(responses);
     }
+
 
 
     @PutMapping("/{seriesId}")

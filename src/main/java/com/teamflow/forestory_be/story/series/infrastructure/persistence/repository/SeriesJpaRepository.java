@@ -1,6 +1,7 @@
 package com.teamflow.forestory_be.story.series.infrastructure.persistence.repository;
 
 import com.teamflow.forestory_be.likes.domain.vo.TargetType;
+import com.teamflow.forestory_be.story.series.domain.vo.SeriesStatus;
 import com.teamflow.forestory_be.story.series.domain.vo.Type;
 import com.teamflow.forestory_be.story.series.infrastructure.persistence.entity.SeriesJpaEntity;
 import java.time.LocalDateTime;
@@ -27,19 +28,38 @@ public interface SeriesJpaRepository extends JpaRepository<SeriesJpaEntity, Long
     );
 
     @Query("""
-        SELECT s 
-        FROM SeriesJpaEntity s
-        WHERE s.authorId = :userId
-        AND s.type = :type
-        AND (:lastSeriesNumber IS NULL OR s.id < :lastSeriesNumber)
-        ORDER BY s.id DESC
-        """)
-    List<SeriesJpaEntity> findByAuthorIdAndType(
-            @Param("userId") Long userId,
-            @Param("type") Type type,
-            @Param("lastSeriesNumber") Integer lastSeriesNumber,
+    SELECT s
+    FROM SeriesJpaEntity s
+    WHERE s.authorId = :authorId
+      AND s.seriesStatus = :status
+      AND (:lastCreatedAt IS NULL OR s.createdAt < :lastCreatedAt)
+    ORDER BY s.createdAt DESC
+""")
+    List<SeriesJpaEntity> findByAuthorAndStatus(
+            @Param("authorId") Long authorId,
+            @Param("status") SeriesStatus status,
+            @Param("lastCreatedAt") LocalDateTime lastCreatedAt,
             Pageable pageable
     );
+
+    @Query("""
+    SELECT s
+    FROM SeriesJpaEntity s
+    WHERE s.authorId = :authorId
+      AND s.type = :type
+      AND s.seriesStatus = :status
+      AND (:lastCreatedAt IS NULL OR s.createdAt < :lastCreatedAt)
+    ORDER BY s.createdAt DESC
+""")
+    List<SeriesJpaEntity> findByAuthorAndTypeAndStatus(
+            @Param("authorId") Long authorId,
+            @Param("type") Type type,
+            @Param("status") SeriesStatus status,
+            @Param("lastCreatedAt") LocalDateTime lastCreatedAt,
+            Pageable pageable
+    );
+
+
 
     @Query("""
         SELECT s.id, s.title, s.thumbnailUrl, COUNT(l.id)

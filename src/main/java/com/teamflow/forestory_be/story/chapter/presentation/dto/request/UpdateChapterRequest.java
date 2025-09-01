@@ -22,7 +22,7 @@ public record UpdateChapterRequest(
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         @NotBlank(message = "제목은 필수입니다.")
-        String title,
+        String chapterTitle,
 
         @Schema(
                 description = "수정할 부제목",
@@ -30,7 +30,7 @@ public record UpdateChapterRequest(
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         @NotBlank(message = "부제목은 필수입니다.")
-        String subtitle,
+        String chapterSubtitle,
 
         @Schema(
                 description = "수정할 본문 내용",
@@ -38,7 +38,7 @@ public record UpdateChapterRequest(
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         @NotBlank(message = "본문은 필수입니다.")
-        String body,
+        String chapterBody,
 
         @Schema(
                 description = "수정할 썸네일 URL",
