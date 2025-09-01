@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -191,4 +192,14 @@ public interface SeriesJpaRepository extends JpaRepository<SeriesJpaEntity, Long
                                @Param("until") LocalDateTime until,
                                @Param("cursorId") Long cursorId,
                                Pageable pageable);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("""
+        UPDATE SeriesJpaEntity s
+        SET s.seriesStatus = :to, s.updatedAt = CURRENT_TIMESTAMP
+        WHERE s.id = :seriesId AND s.seriesStatus = :from
+    """)
+    int updateStatusIf(@Param("seriesId") Long seriesId,
+                       @Param("from") SeriesStatus from,
+                       @Param("to") SeriesStatus to);
 }

@@ -37,7 +37,7 @@ public class ChapterPersistenceAdaptor implements ChapterRepositoryPort {
     }
 
     @Override
-    public List<ChapterWithCreatedAt> findPublishedChaptersWithScroll(Long seriesId, String sort, int lastChapterNumber, int size) {
+    public List<ChapterWithCreatedAt> findPublishedChaptersWithScroll(Long seriesId, String sort, Integer lastChapterNumber, int size) {
         return chapterJpaRepository.findChaptersBySeriesIdWithScroll(seriesId, sort, lastChapterNumber, size);
     }
 

@@ -9,6 +9,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,4 +47,11 @@ public class SeriesJpaEntity extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private SeriesStatus seriesStatus;
 
+    public boolean publishIfPending() {
+        if (this.seriesStatus == SeriesStatus.PENDING_FIRST_CHAPTER) {
+            this.seriesStatus = SeriesStatus.PUBLISHED;
+            return true;
+        }
+        return false; // 이미 PUBLISHED/COMPLETED이면 변경 없음
+    }
 }
