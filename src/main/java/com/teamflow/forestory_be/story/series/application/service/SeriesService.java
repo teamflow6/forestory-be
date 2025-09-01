@@ -28,6 +28,7 @@ import com.teamflow.forestory_be.story.series.presentation.dto.response.GetSerie
 import com.teamflow.forestory_be.story.series.presentation.dto.response.UpdateSeriesResponse;
 import com.teamflow.forestory_be.user.domain.entity.User;
 import com.teamflow.forestory_be.user.domain.repository.UserRepositoryPort;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -93,16 +94,23 @@ public class SeriesService {
 
 
     @Transactional(readOnly = true)
-    public List<GetSeriesListResponse> getSeriesList(GetSeriesListQuery query) {
+    public List<GetSeriesListResponse> getSeriesList(GetSeriesListQuery q) {
+        LocalDateTime lastCreatedAt = q.lastCreatedAt();
+        int size = q.size();
 
-        if ("all".equalsIgnoreCase(query.type())) {
-            return seriesRepositoryPort.findByUserId(query.userId(), query.lastSeriesNumber(), query.size());
+        if ("all".equalsIgnoreCase(q.type())) {
+            // 전체 타입에서 PUBLISHED 상태만
+            return seriesRepositoryPort.findByAuthorAndStatus(
+                    q.userId(), SeriesStatus.PUBLISHED, lastCreatedAt, size);
         } else {
-            Type type = Type.from(query.type());
-            return seriesRepositoryPort.findByUserIdAndType(query.userId(), type, query.lastSeriesNumber(),
-                    query.size());
+            // 특정 타입 + PUBLISHED 상태
+            Type type = Type.from(q.type());
+            return seriesRepositoryPort.findByAuthorAndTypeAndStatus(
+                    q.userId(), type, SeriesStatus.PUBLISHED, lastCreatedAt, size);
         }
     }
+
+
 
 
     @Transactional

@@ -4,6 +4,7 @@ import com.teamflow.forestory_be.likes.domain.vo.TargetType;
 import com.teamflow.forestory_be.story.series.domain.entity.Series;
 import com.teamflow.forestory_be.story.series.domain.exception.SeriesNotFoundException;
 import com.teamflow.forestory_be.story.series.domain.repository.SeriesRepositoryPort;
+import com.teamflow.forestory_be.story.series.domain.vo.SeriesStatus;
 import com.teamflow.forestory_be.story.series.domain.vo.Type;
 import com.teamflow.forestory_be.story.series.infrastructure.persistence.entity.SeriesJpaEntity;
 import com.teamflow.forestory_be.story.series.infrastructure.persistence.repository.SeriesJpaRepository;
@@ -58,9 +59,12 @@ public class SeriesPersistenceAdaptor implements SeriesRepositoryPort {
     }
 
     @Override
-    public List<GetSeriesListResponse> findByUserIdAndType(Long userId, Type type, Integer lastSeriesNumber, int size) {
-        Pageable pageable = PageRequest.of(0, size);
-        return seriesJpaRepository.findByAuthorIdAndType(userId, type, lastSeriesNumber, pageable)
+    @Transactional(readOnly = true)
+    public List<GetSeriesListResponse> findByAuthorAndStatus(
+            Long authorId, SeriesStatus status, LocalDateTime lastCreatedAt, int size) {
+
+        Pageable pageable = PageRequest.of(0, Math.max(1, size));
+        return seriesJpaRepository.findByAuthorAndStatus(authorId, status, lastCreatedAt, pageable)
                 .stream()
                 .map(e -> new GetSeriesListResponse(
                         e.getId().toString(),
@@ -73,6 +77,28 @@ public class SeriesPersistenceAdaptor implements SeriesRepositoryPort {
                 ))
                 .toList();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<GetSeriesListResponse> findByAuthorAndTypeAndStatus(
+            Long authorId, Type type, SeriesStatus status, LocalDateTime lastCreatedAt, int size) {
+
+        Pageable pageable = PageRequest.of(0, Math.max(1, size));
+        return seriesJpaRepository.findByAuthorAndTypeAndStatus(authorId, type, status, lastCreatedAt, pageable)
+                .stream()
+                .map(e -> new GetSeriesListResponse(
+                        e.getId().toString(),
+                        e.getTitle(),
+                        e.getIntroduction(),
+                        e.getThumbnailUrl(),
+                        e.getCreatedAt().toString(),
+                        e.getType().name(),
+                        e.getSeriesStatus().toString()
+                ))
+                .toList();
+    }
+
+
 
     /* ========= 추가: 홈 섹션 & 탭 목록용 ========= */
 

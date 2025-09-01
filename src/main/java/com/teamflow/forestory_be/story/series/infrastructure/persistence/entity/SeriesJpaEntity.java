@@ -43,6 +43,7 @@ public class SeriesJpaEntity extends BaseTimeEntity {
     private Type type;
 
     @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
     private SeriesStatus seriesStatus;
 
 }
