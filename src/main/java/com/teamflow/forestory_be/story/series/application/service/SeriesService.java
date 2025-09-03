@@ -9,6 +9,7 @@ import com.teamflow.forestory_be.story.series.application.dto.command.DeleteLate
 import com.teamflow.forestory_be.story.series.application.dto.command.DeleteSeriesCommand;
 import com.teamflow.forestory_be.story.series.application.dto.command.UpdateSeriesCommand;
 import com.teamflow.forestory_be.story.series.application.dto.query.GetNextChapterInfoQuery;
+import com.teamflow.forestory_be.story.series.application.dto.query.GetSeriesCountQuery;
 import com.teamflow.forestory_be.story.series.application.dto.query.GetSeriesListQuery;
 import com.teamflow.forestory_be.story.series.application.dto.query.GetSeriesQuery;
 import com.teamflow.forestory_be.story.series.domain.entity.Series;
@@ -23,6 +24,7 @@ import com.teamflow.forestory_be.story.series.presentation.dto.response.Complete
 import com.teamflow.forestory_be.story.series.presentation.dto.response.DeleteLatestChapterResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.DeleteSeriesResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.GetNextChapterInfoResponse;
+import com.teamflow.forestory_be.story.series.presentation.dto.response.GetSeriesListCountReponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.GetSeriesListResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.GetSeriesResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.UpdateSeriesResponse;
@@ -33,6 +35,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import software.amazon.awssdk.services.s3.model.PutBucketLifecycleConfigurationRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -108,6 +111,12 @@ public class SeriesService {
             return seriesRepositoryPort.findByAuthorAndTypeAndStatus(
                     q.userId(), type, SeriesStatus.PUBLISHED, lastCreatedAt, size);
         }
+    }
+
+    @Transactional
+    public GetSeriesListCountReponse getSeriesCount(GetSeriesCountQuery query){
+        int count = seriesRepositoryPort.findSeriesCountByUserId(query.userId());
+        return GetSeriesListCountReponse.of(count);
     }
 
 
