@@ -1,11 +1,13 @@
 package com.teamflow.forestory_be.story.series.presentation.controller;
 
+import com.google.api.services.storage.Storage.Objects.Rewrite;
 import com.teamflow.forestory_be.story.series.application.dto.command.CompleteSeriesCommand;
 import com.teamflow.forestory_be.story.series.application.dto.command.CreateSeriesCommand;
 import com.teamflow.forestory_be.story.series.application.dto.command.DeleteLatestChapterCommand;
 import com.teamflow.forestory_be.story.series.application.dto.command.DeleteSeriesCommand;
 import com.teamflow.forestory_be.story.series.application.dto.command.UpdateSeriesCommand;
 import com.teamflow.forestory_be.story.series.application.dto.query.GetNextChapterInfoQuery;
+import com.teamflow.forestory_be.story.series.application.dto.query.GetSeriesCountQuery;
 import com.teamflow.forestory_be.story.series.application.dto.query.GetSeriesListQuery;
 import com.teamflow.forestory_be.story.series.application.dto.query.GetSeriesQuery;
 import com.teamflow.forestory_be.story.series.application.service.SeriesService;
@@ -18,6 +20,7 @@ import com.teamflow.forestory_be.story.series.presentation.dto.response.CreateSe
 import com.teamflow.forestory_be.story.series.presentation.dto.response.DeleteLatestChapterResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.DeleteSeriesResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.GetNextChapterInfoResponse;
+import com.teamflow.forestory_be.story.series.presentation.dto.response.GetSeriesListCountReponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.GetSeriesListResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.GetSeriesResponse;
 import com.teamflow.forestory_be.story.series.presentation.dto.response.UpdateSeriesResponse;
@@ -109,6 +112,20 @@ public class SeriesController {
         List<GetSeriesListResponse> responses = seriesService.getSeriesList(query);
         return ResponseEntity.ok(responses);
     }
+
+    @GetMapping("/count")
+    @Operation(
+            summary = "시리즈 목록 조회 시 필요한 시리즈 수 반환",
+            security = @SecurityRequirement(name = "AccessToken")
+    )
+    public ResponseEntity<GetSeriesListCountReponse> getSeriesListCountReponseResponseEntity(
+            @Parameter(hidden = true) @AuthenticationPrincipal Long userId
+    ){
+        GetSeriesCountQuery query = new GetSeriesCountQuery(userId);
+        GetSeriesListCountReponse reponse = seriesService.getSeriesCount(query);
+        return ResponseEntity.ok(reponse);
+    }
+
 
 
 
