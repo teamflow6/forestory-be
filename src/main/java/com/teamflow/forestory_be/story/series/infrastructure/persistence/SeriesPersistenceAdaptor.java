@@ -98,6 +98,14 @@ public class SeriesPersistenceAdaptor implements SeriesRepositoryPort {
                 .toList();
     }
 
+    @Override
+    @Transactional
+    public int findSeriesCountByUserId(Long userId){
+        int count = seriesJpaRepository.countByUserId(userId);
+        return count;
+    }
+
+
     @Transactional
     public void publishIfPending(Long seriesId) {
         SeriesJpaEntity e = seriesJpaRepository.findById(seriesId)

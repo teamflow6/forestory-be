@@ -60,6 +60,8 @@ public interface SeriesJpaRepository extends JpaRepository<SeriesJpaEntity, Long
             Pageable pageable
     );
 
+    @Query("SELECT COUNT(s) FROM SeriesJpaEntity s WHERE s.authorId = :userId")
+    int countByUserId(@Param("userId") Long userId);
 
 
     @Query("""
