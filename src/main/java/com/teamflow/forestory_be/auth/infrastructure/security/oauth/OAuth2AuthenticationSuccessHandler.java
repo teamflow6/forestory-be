@@ -1,6 +1,5 @@
 package com.teamflow.forestory_be.auth.infrastructure.security.oauth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teamflow.forestory_be.auth.application.AuthService;
 import com.teamflow.forestory_be.auth.application.dto.IssueTokenCommand;
 import com.teamflow.forestory_be.auth.infrastructure.jwt.JwtProvider;
@@ -8,7 +7,6 @@ import com.teamflow.forestory_be.support.common.presentation.cookie.CookieHandle
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -28,10 +26,9 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     private final AuthService authService;
     private final JwtProvider jwtProvider;
     private final CookieHandler cookieHandler;
-    private final ObjectMapper objectMapper;
 
-    @Value("${app.base-uri}")
-    private String baseUri;
+    @Value("${app.login-uri}")
+    private String loginRedirectUri;
 
     // TODO: 추후 인증 성공시 클라이언트로 리다이렉트 하도록 변경
     @Override
@@ -54,7 +51,9 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
-        Map<String, String> responseBody = Map.of(ACCESS_TOKEN, accessToken);
-        response.getWriter().write(objectMapper.writeValueAsString(responseBody));
+        response.sendRedirect(loginRedirectUri + "?token=" + accessToken);
+
+//        Map<String, String> responseBody = Map.of(ACCESS_TOKEN, accessToken);
+//        response.getWriter().write(objectMapper.writeValueAsString(responseBody));
     }
 }
