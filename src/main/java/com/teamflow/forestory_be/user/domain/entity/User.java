@@ -94,7 +94,7 @@ public class User {
             UserStatus.ONBOARDING,
             ContactUrl.empty(),
             Introduction.empty(),
-            profileImageUrl
+            ProfileImageUrl.empty()
         );
     }
 

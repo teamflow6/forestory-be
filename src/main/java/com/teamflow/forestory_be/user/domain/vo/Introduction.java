@@ -6,7 +6,7 @@ public record Introduction(String value) {
     }
 
     public static Introduction fromNullable(String newValue, Introduction value) {
-        if (newValue == null || newValue.isEmpty()) {
+        if (newValue == null) {
             return value;
         }
         return new Introduction(newValue);

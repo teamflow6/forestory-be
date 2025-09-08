@@ -3,7 +3,7 @@ package com.teamflow.forestory_be.user.presentation.dto.response;
 import com.teamflow.forestory_be.user.domain.entity.User;
 
 public record UserProfileResponse(
-    Long userId,
+    String userId,
     String name,
     String introduction,
     String profileUrl,
@@ -12,7 +12,7 @@ public record UserProfileResponse(
 
     public static UserProfileResponse from(User user) {
         return new UserProfileResponse(
-            user.getId(),
+            user.getId().toString(),
             user.getName().value(),
             user.getIntroduction().value(),
             user.getProfileImageUrl().value(),
