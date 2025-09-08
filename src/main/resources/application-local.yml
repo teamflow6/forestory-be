@@ -71,6 +71,7 @@ app:
     refresh-token-expiration: ${REFRESH_TOKEN_EXP:987654321}
 
   base-uri: http://localhost:8080
+  login-uri: ${LOGIN_REDIRECT_URI}
 
 firebase:
   account:
