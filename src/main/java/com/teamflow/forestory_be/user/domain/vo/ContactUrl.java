@@ -8,7 +8,7 @@ public record ContactUrl(
     }
 
     public static ContactUrl fromNullable(String newValue, ContactUrl value) {
-        if (newValue == null || newValue.isEmpty()) {
+        if (newValue == null) {
             return value;
         }
         return new ContactUrl(newValue);

@@ -8,7 +8,7 @@ public record ProfileImageUrl(
     }
 
     public static ProfileImageUrl fromNullable(String newValue, ProfileImageUrl value) {
-        if (newValue == null || newValue.isEmpty()) {
+        if (newValue == null) {
             return value;
         }
         return new ProfileImageUrl(newValue);
